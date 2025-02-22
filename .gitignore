@@ -36,5 +36,7 @@ out/
 ### VS Code ###
 .vscode/
 
+config/speedrun/application-local.yml
+
 ### Kotlin ###
 .kotlin

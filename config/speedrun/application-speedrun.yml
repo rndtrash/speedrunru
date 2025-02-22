@@ -1,0 +1,2 @@
+speedrun:
+  jdbc-name: ${spring.application.name}
