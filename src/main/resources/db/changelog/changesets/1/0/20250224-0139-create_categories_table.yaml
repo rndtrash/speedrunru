@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20250224-0139-create_categories_table.yaml
+      author: Ivan Abramov
+      comment: Создание таблицы категорий
+      changes:
+        - createTable:
+            tableName: categories
+            remarks: Категории
+            columns:
+              - column:
+                  name: id
+                  remarks: Идентификатор
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: game_id
+                  remarks: Идентификатор
+                  type: uuid
+              - column:
+                  name: name
+                  remarks: Название
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  remarks: Описание
+                  type: varchar(255)
+        - addForeignKeyConstraint:
+            baseColumnNames: game_id
+            baseTableName: categories
+            constraintName: fk_games_categories_id
+            referencedColumnNames: id
+            referencedTableName: games
+            onDelete: CASCADE
+            onUpdate: NO ACTION
