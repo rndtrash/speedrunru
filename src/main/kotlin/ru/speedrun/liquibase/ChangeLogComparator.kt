@@ -1,4 +1,4 @@
-package ru.redgift.liquibase
+package ru.speedrun.liquibase
 
 /**
  * Класс сравнения файлов миграции.

@@ -1,4 +1,4 @@
-package ru.redgift.liquibase
+package ru.speedrun.liquibase
 
 import liquibase.integration.spring.SpringLiquibase
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties
