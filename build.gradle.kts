@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "ru.speedrun"
-version = "0.0.1-SNAPSHOT"
+version = appVersion
 
 java {
 	toolchain {
