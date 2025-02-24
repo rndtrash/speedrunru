@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 20250224-0139-create_categories_table.yaml
+      id: 20250224-0139-create_categories_table
       author: Ivan Abramov
       comment: Создание таблицы категорий
       changes:
@@ -27,7 +27,7 @@ databaseChangeLog:
               - column:
                   name: description
                   remarks: Описание
-                  type: varchar(255)
+                  type: text
         - addForeignKeyConstraint:
             baseColumnNames: game_id
             baseTableName: categories

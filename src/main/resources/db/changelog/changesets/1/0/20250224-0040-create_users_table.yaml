@@ -20,7 +20,13 @@ databaseChangeLog:
                   type: uuid
               - column:
                   name: name
-                  remarks: Название страны
+                  remarks: Имя пользователя
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  remarks: Почта пользователя
                   type: varchar(255)
                   constraints:
                     nullable: false
@@ -33,12 +39,12 @@ databaseChangeLog:
               - column:
                   name: password
                   remarks: Пароль
-                  type: varchar(100)
+                  type: varchar(255)
                   constraints:
                     nullable: false
               - column:
                   name: role
-                  remarks: Роль рользователя
+                  remarks: Роль пользователя
                   type: varchar(100)
                   constraints:
                     nullable: false
