@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 20250224-0127-create_games_table.yaml
+      id: 20250224-0127-create_games_table
       author: Ivan Abramov
       comment: Создание таблицы игр
       changes:
@@ -23,10 +23,14 @@ databaseChangeLog:
               - column:
                   name: description
                   remarks: Описание страны
-                  type: varchar(255)
+                  type: text
               - column:
                   name: release_date
                   remarks: дата выхода
                   type: date
                   constraints:
                     nullable: false
+              - column:
+                  name: image_link
+                  remarks: Ссылка на изображение
+                  type: varchar(64)

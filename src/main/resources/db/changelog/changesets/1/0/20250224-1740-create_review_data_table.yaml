@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20250224-1740-create_review_data_table
+      author: Ivan Abramov
+      comment: Создание таблицы рассмотрений модераторов
+      changes:
+        - createTable:
+            tableName: review_data
+            remarks: рассмотрения
+            columns:
+              - column:
+                  name: id
+                  remarks: Идентификатор
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: moderator_id
+                  remarks: Идентификатор модератора
+                  type: uuid
+              - column:
+                  name: message
+                  remarks: Сообщение
+                  type: text
+        - addForeignKeyConstraint:
+            baseColumnNames: moderator_id
+            baseTableName: review_data
+            constraintName: fk_moderator_review_data_id
+            referencedColumnNames: id
+            referencedTableName: users
+            onDelete: CASCADE
+            onUpdate: NO ACTION
+        - addForeignKeyConstraint:
+            baseColumnNames: id
+            baseTableName: review_data
+            constraintName: fk_speedruns_review_data_id
+            referencedColumnNames: id
+            referencedTableName: speedruns
+            onDelete: CASCADE
+            onUpdate: NO ACTION

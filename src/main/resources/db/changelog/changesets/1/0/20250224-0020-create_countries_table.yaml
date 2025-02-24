@@ -23,6 +23,4 @@ databaseChangeLog:
               - column:
                   name: image_link
                   remarks: ссылка на изображение
-                  type: varchar(255)
-                  constraints:
-                    nullable: false
+                  type: varchar(64)

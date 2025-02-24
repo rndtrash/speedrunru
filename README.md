@@ -6,7 +6,7 @@ ER-диаграмма:
 
 Основная структура базы данных представлена на схеме:
 
-![alt text](db-schema.svg "БД talent-management")
+![alt text](db-schema.svg "БД speedrun")
 
 Сервис выполняет актуализацию структуры БД через миграции, используя [Liquibase](https://docs.liquibase.com/home.html).
 Основная схема миграций находится в файле [change-log.yml](src/main/resources/db/changelog/change-log.yml). Форматом
@@ -29,5 +29,5 @@ ER-диаграмма:
 Для правильной работы в реплицированной среде драйверу БД необходимо передать
 [имя подключения приложения](https://jdbc.postgresql.org/documentation/use/#connection-parameters) в переменной
 `ApplicationName` строки подключения (`spring.datasource.url`) к БД. Чтобы запросы отправлялись в правильную реплику.
-Имя задаётся в настройке `tmbackend.jdbc-name` файла [настроек](config/tm-backend/application.yml). По умолчанию
+Имя задаётся в настройке `speedrun.jdbc-name` файла [настроек](config/tm-backend/application.yml). По умолчанию
 равно имени сервиса `spring.application.name`.
