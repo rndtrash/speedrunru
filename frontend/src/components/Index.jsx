@@ -1,0 +1,64 @@
+import React from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import Header from './Header';
+import Footer from './Footer';
+import Login from './Login';
+import Registration from "./Registration.jsx";
+import Games from "./Games.jsx";
+import { Box, Grow } from '@mui/material';
+
+export default function Index() {
+    const location = useLocation();
+
+    return (
+        <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+            <Header />
+
+            <Box
+                component="main"
+                sx={{
+                    flex: 1,
+                    display: 'flex',
+                    justifyContent: 'center',
+                }}
+            >
+                <Box sx={{ width: '100%', maxWidth: '1600px',marginTop:"70px" }}>
+                    <Routes location={location} key={location.pathname}>
+                        <Route
+                            path="/"
+                            element={
+                                <Grow in timeout={1000}>
+                                    <Box>
+                                        <Games />
+                                    </Box>
+                                </Grow>
+                            }
+                        />
+                        <Route
+                            path="/login"
+                            element={
+                                <Grow in timeout={1000}>
+                                    <Box>
+                                        <Login />
+                                    </Box>
+                                </Grow>
+                            }
+                        />
+                        <Route
+                            path="/registration"
+                            element={
+                                <Grow in timeout={1000}>
+                                    <Box>
+                                        <Registration />
+                                    </Box>
+                                </Grow>
+                            }
+                        />
+                    </Routes>
+                </Box>
+            </Box>
+
+            <Footer />
+        </Box>
+    );
+}
