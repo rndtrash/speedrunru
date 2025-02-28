@@ -3,8 +3,10 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 import Login from './Login';
-import Registration from "./Registration.jsx";
-import Games from "./Games.jsx";
+import Registration from './Registration';
+import Games from './Games';
+import GameInfo from './GameInfo';
+import ErrorPage from './ErrorPage';
 import { Box, Grow } from '@mui/material';
 
 export default function Index() {
@@ -22,7 +24,7 @@ export default function Index() {
                     justifyContent: 'center',
                 }}
             >
-                <Box sx={{ width: '100%', maxWidth: '1600px',marginTop:"70px" }}>
+                <Box sx={{ width: '100%', maxWidth: '1600px', marginTop: '70px' }}>
                     <Routes location={location} key={location.pathname}>
                         <Route
                             path="/"
@@ -30,6 +32,16 @@ export default function Index() {
                                 <Grow in timeout={1000}>
                                     <Box>
                                         <Games />
+                                    </Box>
+                                </Grow>
+                            }
+                        />
+                        <Route
+                            path="/games/:id"
+                            element={
+                                <Grow in timeout={1000}>
+                                    <Box>
+                                        <GameInfo />
                                     </Box>
                                 </Grow>
                             }
@@ -50,6 +62,16 @@ export default function Index() {
                                 <Grow in timeout={1000}>
                                     <Box>
                                         <Registration />
+                                    </Box>
+                                </Grow>
+                            }
+                        />
+                        <Route
+                            path="*"
+                            element={
+                                <Grow in timeout={1000}>
+                                    <Box>
+                                        <ErrorPage errorCode="404" />
                                     </Box>
                                 </Grow>
                             }
