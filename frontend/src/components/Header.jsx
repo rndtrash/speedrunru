@@ -114,8 +114,13 @@ export default function Header(props) {
                 >
                     <Toolbar>
                         {isMobile && (
-                            <IconButton color="inherit" edge="start" onClick={handleDrawerToggle} sx={{ mr: 2 }}>
-                                <MenuIcon />
+                            <IconButton
+                                color="inherit"
+                                edge="start"
+                                onClick={handleDrawerToggle}
+                                sx={{ mr: 2 }}
+                            >
+                                <MenuIcon sx={{ color: '#000000' }} />
                             </IconButton>
                         )}
                         <Box
