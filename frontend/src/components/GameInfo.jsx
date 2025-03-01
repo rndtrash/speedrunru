@@ -112,7 +112,7 @@ export default function GameInfo() {
     return (
         <Container sx={{ mt: 5 }}>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 3, mb: 3 }}>
-                <Box component="img" src={gameInfo.icon} alt={gameInfo.name} sx={{ width: 120, height: 120, borderRadius: 2, objectFit: 'cover' }} />
+                <Box component="img" src={gameInfo.icon} alt={gameInfo.name} sx={{ width: 120, height: 120, borderRadius: 2, objectFit: 'contain' }} />
                 <Box sx={{ flexGrow: 1 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                         <Box>
