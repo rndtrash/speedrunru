@@ -31,12 +31,6 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: login
-                  remarks: Логин
-                  type: varchar(255)
-                  constraints:
-                    nullable: false
-              - column:
                   name: password
                   remarks: Пароль
                   type: varchar(255)

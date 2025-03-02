@@ -10,10 +10,11 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  remarks: Идентификатор
+                  remarks: Идентификатор (также ссылается на speedruns.id)
                   type: uuid
                   constraints:
                     primaryKey: true
+                    nullable: false
               - column:
                   name: moderator_id
                   remarks: Идентификатор модератора
@@ -23,18 +24,18 @@ databaseChangeLog:
                   remarks: Сообщение
                   type: text
         - addForeignKeyConstraint:
+            baseColumnNames: id
+            baseTableName: review_data
+            constraintName: fk_review_data_speedrun_id
+            referencedColumnNames: id
+            referencedTableName: speedruns
+            onDelete: CASCADE
+            onUpdate: NO ACTION
+        - addForeignKeyConstraint:
             baseColumnNames: moderator_id
             baseTableName: review_data
             constraintName: fk_moderator_review_data_id
             referencedColumnNames: id
             referencedTableName: users
-            onDelete: CASCADE
-            onUpdate: NO ACTION
-        - addForeignKeyConstraint:
-            baseColumnNames: id
-            baseTableName: review_data
-            constraintName: fk_speedruns_review_data_id
-            referencedColumnNames: id
-            referencedTableName: speedruns
             onDelete: CASCADE
             onUpdate: NO ACTION
