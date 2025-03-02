@@ -25,7 +25,7 @@ databaseChangeLog:
               - column:
                   name: date
                   remarks: Дата
-                  type: date
+                  type: datetime
                   constraints:
                     nullable: false
               - column:

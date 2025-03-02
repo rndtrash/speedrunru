@@ -23,6 +23,12 @@ databaseChangeLog:
                   name: message
                   remarks: Сообщение
                   type: text
+              - column:
+                  name: date
+                  remarks: Дата
+                  type: datetime
+                  constraints:
+                    nullable: false
         - addForeignKeyConstraint:
             baseColumnNames: id
             baseTableName: review_data
