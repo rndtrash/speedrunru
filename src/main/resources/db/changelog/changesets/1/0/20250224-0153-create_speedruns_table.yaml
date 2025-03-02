@@ -43,7 +43,7 @@ databaseChangeLog:
               - column:
                   name: status
                   remarks: Статус спидрана
-                  type: bigint
+                  type: varchar(100)
                   constraints:
                     nullable: false
         - addForeignKeyConstraint:
