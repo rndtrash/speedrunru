@@ -1,0 +1,58 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20250224-0040-create-users_table
+      author: Ivan Abramov
+      comment: Создание таблицы пользователей
+      changes:
+        - createTable:
+            tableName: users
+            remarks: Пользователи
+            columns:
+              - column:
+                  name: id
+                  remarks: Идентификатор
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: country_id
+                  remarks: Идентификатор страны
+                  type: uuid
+              - column:
+                  name: name
+                  remarks: Имя пользователя
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  remarks: Почта пользователя
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  remarks: Пароль
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reg_date
+                  remarks: Дата
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  remarks: Роль пользователя
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseColumnNames: country_id
+            baseTableName: users
+            constraintName: fk_users_countries_id
+            referencedColumnNames: id
+            referencedTableName: countries
+            onDelete: CASCADE
+            onUpdate: NO ACTION

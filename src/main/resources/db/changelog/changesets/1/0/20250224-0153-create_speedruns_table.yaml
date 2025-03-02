@@ -1,0 +1,64 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20250224-0139-create_categories_table
+      author: Ivan Abramov
+      comment: Создание таблицы категорий
+      changes:
+        - createTable:
+            tableName: speedruns
+            remarks: Категории
+            columns:
+              - column:
+                  name: id
+                  remarks: Идентификатор
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: category_id
+                  remarks: Идентификатор категории
+                  type: uuid
+              - column:
+                  name: author_id
+                  remarks: Идентификатор автора
+                  type: uuid
+              - column:
+                  name: date
+                  remarks: Дата
+                  type: datetime
+                  constraints:
+                    nullable: false
+              - column:
+                  name: link
+                  remarks: Ссылка на видео
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: time
+                  remarks: Время прохождения
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  remarks: Статус спидрана
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseColumnNames: category_id
+            baseTableName: speedruns
+            constraintName: fk_categories_speedruns_id
+            referencedColumnNames: id
+            referencedTableName: categories
+            onDelete: CASCADE
+            onUpdate: NO ACTION
+        - addForeignKeyConstraint:
+            baseColumnNames: author_id
+            baseTableName: speedruns
+            constraintName: fk_author_speedruns_id
+            referencedColumnNames: id
+            referencedTableName: users
+            onDelete: CASCADE
+            onUpdate: NO ACTION

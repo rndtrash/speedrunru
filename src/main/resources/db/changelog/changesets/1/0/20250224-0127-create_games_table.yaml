@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20250224-0127-create_games_table
+      author: Ivan Abramov
+      comment: Создание таблицы игр
+      changes:
+        - createTable:
+            tableName: games
+            remarks: Игры
+            columns:
+              - column:
+                  name: id
+                  remarks: Идентификатор
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  remarks: Название игры
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  remarks: Описание страны
+                  type: text
+              - column:
+                  name: release_date
+                  remarks: дата выхода
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: image_link
+                  remarks: Ссылка на изображение
+                  type: varchar(64)

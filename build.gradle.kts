@@ -1,3 +1,6 @@
+val appVersion: String by project
+val liquibaseVersion: String by project
+
 plugins {
 	kotlin("jvm")
 	kotlin("plugin.spring")
@@ -7,7 +10,7 @@ plugins {
 }
 
 group = "ru.speedrun"
-version = "0.0.1-SNAPSHOT"
+version = appVersion
 
 java {
 	toolchain {
@@ -23,7 +26,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.postgresql:postgresql")
-	implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.liquibase:liquibase-core:$liquibaseVersion")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
