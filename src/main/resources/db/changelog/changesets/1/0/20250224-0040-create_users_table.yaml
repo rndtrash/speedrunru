@@ -37,6 +37,12 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: reg_date
+                  remarks: Дата
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
                   name: role
                   remarks: Роль пользователя
                   type: varchar(100)
