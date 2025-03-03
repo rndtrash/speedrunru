@@ -8,13 +8,14 @@ import {
     IconButton,
     InputAdornment,
 } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { loginUser } from '../api/auth';
-import { passwordRegex, usernameRegex } from "../utils/regex.js";
+import { passwordRegex, usernameRegex } from '../utils/regex.js';
+import { setAuthToken, findUserByUsername, setCurrentUser } from '../utils/authStore';
 
 function Login() {
+    const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [usernameTouched, setUsernameTouched] = useState(false);
     const [usernameFocused, setUsernameFocused] = useState(false);
@@ -24,28 +25,41 @@ function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [formError, setFormError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+
     const isUsernameValid = usernameRegex.test(username);
     const isPasswordValid = passwordRegex.test(password);
     const isFormValid = username !== '' && password !== '';
+
     const togglePasswordVisibility = () => {
         setShowPassword((prev) => !prev);
     };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!isFormValid) return;
         setIsSubmitting(true);
         setFormError('');
         try {
-            const data = await loginUser({ username, password });
-            console.log('Token:', data.token);
+            // лже JWT
+            const token = 'MOCK_JWT_' + Math.random().toString(36).substr(2);
+            const user = findUserByUsername(username);
+            if (!user) {
+                throw new Error('Пользователь не найден. Зарегистрируйтесь.');
+            }
+            setAuthToken(token);
+            setCurrentUser(user);
+            console.log('Token:', token);
+            navigate('/');
         } catch (error) {
             setFormError(error.message);
         } finally {
             setIsSubmitting(false);
         }
     };
+
     const shouldShowError = (touched, focused, value, isValid) =>
         touched && !focused && value !== '' && !isValid;
+
     return (
         <Box
             sx={{
@@ -101,9 +115,9 @@ function Login() {
                 </Typography>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
                     <TextField
-                        label="Имя пользователя"
                         variant="outlined"
                         fullWidth
+                        placeholder="Введите имя пользователя"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         onFocus={() => setUsernameFocused(true)}
@@ -120,17 +134,17 @@ function Login() {
                                 : ''
                         }
                         sx={{
-                            '& .MuiInputLabel-root': { color: '#000000' },
-                            '& .MuiInputBase-input': { color: '#000000' },
+                            '& .MuiInputLabel-root': { color: '#838488' },
+                            '& .MuiOutlinedInput-input': { color: '#000000' },
                             '& .MuiOutlinedInput-root': { borderRadius: '20px' },
-                            '& .MuiInputBase-input::placeholder': { color: '#838488' },
+                            '& .MuiOutlinedInput-input::placeholder': { color: '#838488' },
                         }}
                     />
                     <TextField
-                        label="Пароль"
                         type={showPassword ? 'text' : 'password'}
                         variant="outlined"
                         fullWidth
+                        placeholder="Введите пароль"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         onFocus={() => setPasswordFocused(true)}
@@ -147,10 +161,10 @@ function Login() {
                                 : ''
                         }
                         sx={{
-                            '& .MuiInputLabel-root': { color: '#000000' },
-                            '& .MuiInputBase-input': { color: '#000000' },
+                            '& .MuiInputLabel-root': { color: '#838488' },
+                            '& .MuiOutlinedInput-input': { color: '#000000' },
                             '& .MuiOutlinedInput-root': { borderRadius: '20px' },
-                            '& .MuiInputBase-input::placeholder': { color: '#838488' },
+                            '& .MuiOutlinedInput-input::placeholder': { color: '#838488' },
                         }}
                         InputProps={{
                             endAdornment: (

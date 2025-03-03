@@ -17,10 +17,11 @@ import {
     Divider,
     InputAdornment,
     useMediaQuery,
-    useTheme,
+    useTheme, Typography,
 } from '@mui/material';
 import { Search as SearchIcon, Menu as MenuIcon } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
+import { isAuthorized, getCurrentUser, clearAuthToken, clearCurrentUser } from '../utils/authStore';
 
 function HideOnScroll(props) {
     const { children, window: windowProp } = props;
@@ -37,7 +38,6 @@ function HideOnScroll(props) {
 export default function Header(props) {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
     const [tabValue, setTabValue] = React.useState(0);
     const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -47,6 +47,12 @@ export default function Header(props) {
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
+    };
+
+    const handleLogout = () => {
+        clearAuthToken();
+        clearCurrentUser();
+        window.location.href = '/login';
     };
 
     const drawer = (
@@ -62,7 +68,7 @@ export default function Header(props) {
                 <ListItem component={Link} to="/discussions">
                     <ListItemText primary="Обсуждения" />
                 </ListItem>
-                <ListItem  component={Link} to="/help">
+                <ListItem component={Link} to="/help">
                     <ListItemText primary="Помощь" />
                 </ListItem>
             </List>
@@ -87,17 +93,15 @@ export default function Header(props) {
                 <Button component={Link} to="/login" sx={{ mb: 1, textTransform: 'none' }}>
                     Войти
                 </Button>
-                <Button
-                    component={Link}
-                    to="/Registration"
-                    variant="contained"
-                    sx={{ textTransform: 'none' }}
-                >
+                <Button component={Link} to="/Registration" variant="contained" sx={{ textTransform: 'none' }}>
                     Зарегистрироваться
                 </Button>
             </Box>
         </Box>
     );
+
+    const currentUser = getCurrentUser();
+    const authorized = isAuthorized();
 
     return (
         <React.Fragment>
@@ -114,12 +118,7 @@ export default function Header(props) {
                 >
                     <Toolbar>
                         {isMobile && (
-                            <IconButton
-                                color="inherit"
-                                edge="start"
-                                onClick={handleDrawerToggle}
-                                sx={{ mr: 2 }}
-                            >
+                            <IconButton color="inherit" edge="start" onClick={handleDrawerToggle} sx={{ mr: 2 }}>
                                 <MenuIcon sx={{ color: '#000000' }} />
                             </IconButton>
                         )}
@@ -217,48 +216,63 @@ export default function Header(props) {
                                         },
                                     }}
                                 />
-                                <Box
-                                    component={Link}
-                                    to="/login"
-                                    sx={{
-                                        mr: 2,
-                                        textDecoration: 'none',
-                                        color: '#000000',
-                                        textTransform: 'none',
-                                    }}
-                                >
-                                    Войти
-                                </Box>
-                                <Button
-                                    component={Link}
-                                    to="/Registration"
-                                    sx={{
-                                        textTransform: 'none',
-                                        borderRadius: '20px',
-                                        backgroundColor: '#6C67EC',
-                                        color: '#fff',
-                                        padding: '8px 16px',
-                                        '&:hover': {
-                                            backgroundColor: '#5749D0',
-                                        },
-                                    }}
-                                >
-                                    Зарегистрироваться
-                                </Button>
+                                {authorized && currentUser ? (
+                                    <Box sx={{ display: 'flex', alignItems: 'center',ml: 10 }}>
+                                        <img
+                                            src="/assets/defaultAvatar.png"
+                                            alt="avatar"
+                                            style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '8px' }}
+                                        />
+                                        <Typography sx={{ color: '#000000', mr: 1 }}>
+                                            {currentUser.username}
+                                        </Typography>
+                                        <IconButton onClick={handleLogout}>
+                                            <img src="/assets/logOutIcon.png" alt="logout" style={{ width: '24px', height: '24px' }} />
+                                        </IconButton>
+                                    </Box>
+                                ) : (
+                                    <React.Fragment>
+                                        <Box
+                                            component={Link}
+                                            to="/login"
+                                            sx={{
+                                                mr: 2,
+                                                textDecoration: 'none',
+                                                color: '#000000',
+                                                textTransform: 'none',
+                                            }}
+                                        >
+                                            Войти
+                                        </Box>
+                                        <Button
+                                            component={Link}
+                                            to="/Registration"
+                                            sx={{
+                                                textTransform: 'none',
+                                                borderRadius: '20px',
+                                                backgroundColor: '#6C67EC',
+                                                color: '#fff',
+                                                padding: '8px 16px',
+                                                '&:hover': {
+                                                    backgroundColor: '#5749D0',
+                                                },
+                                            }}
+                                        >
+                                            Зарегистрироваться
+                                        </Button>
+                                    </React.Fragment>
+                                )}
                             </React.Fragment>
                         )}
                     </Toolbar>
                 </AppBar>
             </HideOnScroll>
-
             <nav>
                 <Drawer
                     anchor="left"
                     open={mobileOpen}
                     onClose={handleDrawerToggle}
-                    ModalProps={{
-                        keepMounted: true,
-                    }}
+                    ModalProps={{ keepMounted: true }}
                     sx={{
                         display: { xs: 'block', sm: 'none' },
                         '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 250 },

@@ -14,13 +14,16 @@ import {
 } from '@mui/material';
 import { gameInfoMock } from '../utils/gameInfoMock';
 import { gameRecordsMock } from '../utils/gameRecordsMock';
+import { isAuthorized } from '../utils/authStore';
 
 function formatTime(ms) {
     if (ms <= 0) return '0:00:00';
     const hours = Math.floor(ms / 3600000);
     const minutes = Math.floor((ms % 3600000) / 60000);
     const seconds = Math.floor((ms % 60000) / 1000);
-    return `${hours.toString().padStart(1, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    return `${hours.toString().padStart(1, '0')}:${minutes
+        .toString()
+        .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
 function formatDate(dateStr) {
@@ -29,7 +32,9 @@ function formatDate(dateStr) {
 
 function formatReleaseDate(dateStr) {
     const date = new Date(dateStr);
-    return `${String(date.getDate()).padStart(2, '0')}.${String(date.getMonth() + 1).padStart(2, '0')}.${date.getFullYear()}`;
+    return `${String(date.getDate()).padStart(2, '0')}.${String(
+        date.getMonth() + 1
+    ).padStart(2, '0')}.${date.getFullYear()}`;
 }
 
 export default function GameInfo() {
@@ -40,6 +45,7 @@ export default function GameInfo() {
     const [records, setRecords] = useState([]);
     const [sortField, setSortField] = useState(null);
     const [sortOrder, setSortOrder] = useState('asc');
+    const authorized = isAuthorized();
 
     useEffect(() => {
         const timeoutId = setTimeout(() => {
@@ -59,7 +65,8 @@ export default function GameInfo() {
     }, [id, navigate]);
 
     useEffect(() => {
-        if (gameInfo?.categories?.length) setActiveCategory(gameInfo.categories[0].id);
+        if (gameInfo?.categories?.length)
+            setActiveCategory(gameInfo.categories[0].id);
     }, [gameInfo]);
 
     useEffect(() => {
@@ -110,7 +117,14 @@ export default function GameInfo() {
     }
 
     return (
-        <Container sx={{ mt: 5, padding: '25px 35px', backgroundColor: '#ffffff', borderRadius: '24px' }}>
+        <Container
+            sx={{
+                mt: 5,
+                padding: '25px 35px',
+                backgroundColor: '#ffffff',
+                borderRadius: '24px',
+            }}
+        >
             <Box sx={{ position: 'relative', mb: 3 }}>
                 <Box
                     component="img"
@@ -126,15 +140,38 @@ export default function GameInfo() {
                         objectFit: 'contain',
                     }}
                 />
-                <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
-                    {gameInfo.name}
-                </Typography>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
+                        {gameInfo.name}
+                    </Typography>
+                    <Button
+                        disabled={!authorized}
+                        sx={{
+                            textTransform: 'none',
+                            borderRadius: '20px',
+                            backgroundColor: authorized ? '#6C67EC' : '#6C67EC94',
+                            color: '#fff !important',
+                            padding: '8px 16px',
+                            '&:hover': {
+                                backgroundColor: authorized ? '#5749D0' : '#6C67EC94',
+                                color: '#fff',
+
+                            },
+                        }}
+                    >
+                        Отправить запись
+                    </Button>
+                </Box>
                 <Typography variant="body1" sx={{ mb: 1 }}>
                     Дата выпуска: {formatReleaseDate(gameInfo.releaseDate)}
                 </Typography>
-                <Typography variant="body1">
-                    {gameInfo.description}
-                </Typography>
+                <Typography variant="body1">{gameInfo.description}</Typography>
             </Box>
             <Box sx={{ display: 'flex', gap: '22px', mb: 1 }}>
                 {gameInfo.categories.map((cat) => {
@@ -159,7 +196,6 @@ export default function GameInfo() {
                                     opacity: 0.9,
                                 },
                             }}
-
                         >
                             {cat.name}
                         </Button>

@@ -8,13 +8,14 @@ import {
     IconButton,
     InputAdornment,
 } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { registerUser } from '../api/auth';
-import { emailRegex, passwordRegex, usernameRegex } from "../utils/regex.js";
+import { emailRegex, passwordRegex, usernameRegex } from '../utils/regex.js';
+import { setAuthToken, addUser, findUser, setCurrentUser } from '../utils/authStore';
 
 function Registration() {
+    const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [usernameTouched, setUsernameTouched] = useState(false);
     const [usernameFocused, setUsernameFocused] = useState(false);
@@ -31,6 +32,7 @@ function Registration() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [formError, setFormError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+
     const isUsernameValid = usernameRegex.test(username);
     const isEmailValid = emailRegex.test(email);
     const isPasswordValid = passwordRegex.test(password);
@@ -44,29 +46,42 @@ function Registration() {
         email !== '' &&
         password !== '' &&
         confirmPassword !== '';
+
     const togglePasswordVisibility = () => {
         setShowPassword((prev) => !prev);
     };
     const toggleConfirmPasswordVisibility = () => {
         setShowConfirmPassword((prev) => !prev);
     };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!isFormValid) return;
+        if (findUser({ username, email })) {
+            setFormError('Пользователь с таким именем или email уже зарегистрирован');
+            return;
+        }
         setIsSubmitting(true);
         setFormError('');
         try {
-            const data = await registerUser({ username, email, password });
-            console.log('Token:', data.token);
-            //todo сделать сохранение пользователя и его данных или перенаправить на страницу авторизации
+            // лже JWT
+            const token = 'MOCK_JWT_' + Math.random().toString(36).substr(2);
+            setAuthToken(token);
+            const newUser = { username, email, token, avatar: '/assets/defaultAvatar.png' };
+            addUser(newUser);
+            setCurrentUser(newUser);
+            console.log('Token:', token);
+            navigate('/');
         } catch (error) {
             setFormError(error.message);
         } finally {
             setIsSubmitting(false);
         }
     };
+
     const shouldShowError = (touched, focused, value, isValid) =>
         touched && !focused && value !== '' && !isValid;
+
     return (
         <Box
             sx={{
