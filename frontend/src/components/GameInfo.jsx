@@ -110,51 +110,109 @@ export default function GameInfo() {
     }
 
     return (
-        <Container sx={{ mt: 5 }}>
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 3, mb: 3 }}>
-                <Box component="img" src={gameInfo.icon} alt={gameInfo.name} sx={{ width: 120, height: 120, borderRadius: 2, objectFit: 'contain' }} />
-                <Box sx={{ flexGrow: 1 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                        <Box>
-                            <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>{gameInfo.name}</Typography>
-                            <Typography variant="body1">Дата выпуска: {formatReleaseDate(gameInfo.releaseDate)}</Typography>
-                        </Box>
-                        <Button variant="contained" color="primary" sx={{ height: 40 }}>Отправить запись</Button>
-                    </Box>
-                    <Typography variant="body1">{gameInfo.description}</Typography>
-                </Box>
+        <Container sx={{ mt: 5, padding: '25px 35px', backgroundColor: '#ffffff', borderRadius: '24px' }}>
+            <Box sx={{ position: 'relative', mb: 3 }}>
+                <Box
+                    component="img"
+                    src={gameInfo.icon}
+                    alt={gameInfo.name}
+                    sx={{
+                        float: 'left',
+                        mr: 2,
+                        mb: 1,
+                        width: 120,
+                        height: 120,
+                        borderRadius: 2,
+                        objectFit: 'contain',
+                    }}
+                />
+                <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
+                    {gameInfo.name}
+                </Typography>
+                <Typography variant="body1" sx={{ mb: 1 }}>
+                    Дата выпуска: {formatReleaseDate(gameInfo.releaseDate)}
+                </Typography>
+                <Typography variant="body1">
+                    {gameInfo.description}
+                </Typography>
             </Box>
-            <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
-                {gameInfo.categories.map((cat) => (
-                    <Button key={cat.id} variant={activeCategory === cat.id ? 'contained' : 'outlined'} onClick={() => setActiveCategory(cat.id)}>
-                        {cat.name}
-                    </Button>
-                ))}
+            <Box sx={{ display: 'flex', gap: '22px', mb: 1 }}>
+                {gameInfo.categories.map((cat) => {
+                    const isActive = activeCategory === cat.id;
+                    return (
+                        <Button
+                            key={cat.id}
+                            variant={isActive ? 'contained' : 'outlined'}
+                            onClick={() => setActiveCategory(cat.id)}
+                            sx={{
+                                height: '28px',
+                                padding: '4.5px 28px',
+                                borderTopLeftRadius: '24px',
+                                borderTopRightRadius: '24px',
+                                backgroundColor: isActive ? '#DCFC6A' : undefined,
+                                color: isActive ? '#000000' : undefined,
+                                transition: 'box-shadow 0.3s, opacity 0.3s',
+                                '&:hover': {
+                                    backgroundColor: isActive ? '#DCFC6A' : undefined,
+                                    color: isActive ? '#000000' : undefined,
+                                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                                    opacity: 0.9,
+                                },
+                            }}
+
+                        >
+                            {cat.name}
+                        </Button>
+                    );
+                })}
             </Box>
-            <Typography variant="h6" sx={{ mb: 2 }}>Описание категории</Typography>
-            <Typography variant="body1" sx={{ mb: 3 }}>Здесь можно написать дополнительную информацию о выбранной категории.</Typography>
-            <Typography variant="h6" sx={{ mb: 2 }}>Рейтинги игроков</Typography>
-            <Paper>
+            <Box sx={{ border: '1px solid #DCDBE0', width: '100%', mb: 3 }} />
+            <Typography variant="h6" sx={{ mb: 2 }}>
+                Описание категории
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 3 }}>
+                Здесь можно написать дополнительную информацию о выбранной категории.
+            </Typography>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+                Рейтинги игроков
+            </Typography>
+            <Paper
+                sx={{
+                    border: '1px solid #E6E6E6',
+                    borderTopRightRadius: '10px',
+                    borderTopLeftRadius: '10px',
+                }}
+            >
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Игрок</TableCell>
-                            <TableCell>Платформа</TableCell>
+                            <TableCell onClick={() => handleSort('player')} sx={{ cursor: 'pointer' }}>
+                                <Typography variant="body2">Игрок</Typography>
+                            </TableCell>
                             <TableCell onClick={() => handleSort('time')} sx={{ cursor: 'pointer' }}>
-                                Время {sortField === 'time' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
+                                <Typography variant="body2">
+                                    Время {sortField === 'time' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
+                                </Typography>
                             </TableCell>
                             <TableCell onClick={() => handleSort('submitted_at')} sx={{ cursor: 'pointer' }}>
-                                Дата {sortField === 'submitted_at' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
+                                <Typography variant="body2">
+                                    Дата {sortField === 'submitted_at' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
+                                </Typography>
                             </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {sortedRecords.map((record, idx) => (
                             <TableRow key={idx}>
-                                <TableCell>{record.player}</TableCell>
-                                <TableCell>{record.platform}</TableCell>
-                                <TableCell>{formatTime(record.time)}</TableCell>
-                                <TableCell>{formatDate(record.submitted_at)}</TableCell>
+                                <TableCell>
+                                    <Typography variant="body3">{record.player}</Typography>
+                                </TableCell>
+                                <TableCell>
+                                    <Typography variant="body3">{formatTime(record.time)}</Typography>
+                                </TableCell>
+                                <TableCell>
+                                    <Typography variant="body3">{formatDate(record.submitted_at)}</Typography>
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

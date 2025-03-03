@@ -14,7 +14,7 @@ const nicknames = [
     'Phantom',
 ];
 
-export const speedrunMockData = Array.from({ length: 50 }, () => {
+export const speedrunMockData = Array.from({ length: 10 }, () => {
     const gameChoice =
         gameInfoMock[Math.floor(Math.random() * gameInfoMock.length)];
 

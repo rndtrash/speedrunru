@@ -12,55 +12,40 @@ import { Link as RouterLink } from 'react-router-dom';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { loginUser } from '../api/auth';
-import {passwordRegex, usernameRegex} from "../utils/regex.js";
+import { passwordRegex, usernameRegex } from "../utils/regex.js";
 
 function Login() {
     const [username, setUsername] = useState('');
     const [usernameTouched, setUsernameTouched] = useState(false);
     const [usernameFocused, setUsernameFocused] = useState(false);
-
     const [password, setPassword] = useState('');
     const [passwordTouched, setPasswordTouched] = useState(false);
     const [passwordFocused, setPasswordFocused] = useState(false);
-
     const [showPassword, setShowPassword] = useState(false);
     const [formError, setFormError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
-
-    // Validation
     const isUsernameValid = usernameRegex.test(username);
     const isPasswordValid = passwordRegex.test(password);
-
-    const isFormValid =
-        username !== '' &&
-        password !== '' &&
-        isUsernameValid &&
-        isPasswordValid;
-
+    const isFormValid = username !== '' && password !== '';
     const togglePasswordVisibility = () => {
         setShowPassword((prev) => !prev);
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!isFormValid) return;
         setIsSubmitting(true);
         setFormError('');
-
         try {
             const data = await loginUser({ username, password });
             console.log('Token:', data.token);
-            //todo сделать сохранение пользователя и его данных
         } catch (error) {
             setFormError(error.message);
         } finally {
             setIsSubmitting(false);
         }
     };
-
     const shouldShowError = (touched, focused, value, isValid) =>
         touched && !focused && value !== '' && !isValid;
-
     return (
         <Box
             sx={{
@@ -95,7 +80,6 @@ function Login() {
                         zIndex: '-1',
                     }}
                 />
-
                 <Box
                     component="img"
                     src="/assets/mascots/bunny.png"
@@ -108,7 +92,6 @@ function Login() {
                         zIndex: '-1',
                     }}
                 />
-
                 <Typography
                     variant="h4"
                     component="h1"
@@ -116,7 +99,6 @@ function Login() {
                 >
                     Вход
                 </Typography>
-
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
                     <TextField
                         label="Имя пользователя"
@@ -138,12 +120,12 @@ function Login() {
                                 : ''
                         }
                         sx={{
-                            '& .MuiInputLabel-root': { color: '#838488' },
-                            '& .MuiInputBase-input': { color: '#838488' },
+                            '& .MuiInputLabel-root': { color: '#000000' },
+                            '& .MuiInputBase-input': { color: '#000000' },
                             '& .MuiOutlinedInput-root': { borderRadius: '20px' },
+                            '& .MuiInputBase-input::placeholder': { color: '#838488' },
                         }}
                     />
-
                     <TextField
                         label="Пароль"
                         type={showPassword ? 'text' : 'password'}
@@ -165,9 +147,10 @@ function Login() {
                                 : ''
                         }
                         sx={{
-                            '& .MuiInputLabel-root': { color: '#838488' },
-                            '& .MuiInputBase-input': { color: '#838488' },
+                            '& .MuiInputLabel-root': { color: '#000000' },
+                            '& .MuiInputBase-input': { color: '#000000' },
                             '& .MuiOutlinedInput-root': { borderRadius: '20px' },
+                            '& .MuiInputBase-input::placeholder': { color: '#838488' },
                         }}
                         InputProps={{
                             endAdornment: (
@@ -180,13 +163,11 @@ function Login() {
                         }}
                     />
                 </Box>
-
                 {formError && (
                     <Typography color="error" sx={{ mt: 1, textAlign: 'center' }}>
                         {formError}
                     </Typography>
                 )}
-
                 <Button
                     type="submit"
                     variant="contained"
@@ -203,9 +184,7 @@ function Login() {
                 >
                     Войти
                 </Button>
-
-
-                <Typography variant="body2" sx={{ textAlign: 'center' }}>
+                <Typography variant="body1" sx={{ textAlign: 'center' }}>
                     Нет аккаунта?{' '}
                     <Link
                         component={RouterLink}

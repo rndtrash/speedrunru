@@ -12,36 +12,29 @@ import { Link as RouterLink } from 'react-router-dom';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { registerUser } from '../api/auth';
-import {emailRegex, passwordRegex, usernameRegex} from "../utils/regex.js";
+import { emailRegex, passwordRegex, usernameRegex } from "../utils/regex.js";
 
 function Registration() {
     const [username, setUsername] = useState('');
     const [usernameTouched, setUsernameTouched] = useState(false);
     const [usernameFocused, setUsernameFocused] = useState(false);
-
     const [email, setEmail] = useState('');
     const [emailTouched, setEmailTouched] = useState(false);
     const [emailFocused, setEmailFocused] = useState(false);
-
     const [password, setPassword] = useState('');
     const [passwordTouched, setPasswordTouched] = useState(false);
     const [passwordFocused, setPasswordFocused] = useState(false);
-
     const [confirmPassword, setConfirmPassword] = useState('');
     const [confirmPasswordTouched, setConfirmPasswordTouched] = useState(false);
     const [confirmPasswordFocused, setConfirmPasswordFocused] = useState(false);
-
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [formError, setFormError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
-
-    // Validation
     const isUsernameValid = usernameRegex.test(username);
     const isEmailValid = emailRegex.test(email);
     const isPasswordValid = passwordRegex.test(password);
     const doPasswordsMatch = password === confirmPassword;
-
     const isFormValid =
         isUsernameValid &&
         isEmailValid &&
@@ -51,21 +44,17 @@ function Registration() {
         email !== '' &&
         password !== '' &&
         confirmPassword !== '';
-
     const togglePasswordVisibility = () => {
         setShowPassword((prev) => !prev);
     };
-
     const toggleConfirmPasswordVisibility = () => {
         setShowConfirmPassword((prev) => !prev);
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!isFormValid) return;
         setIsSubmitting(true);
         setFormError('');
-
         try {
             const data = await registerUser({ username, email, password });
             console.log('Token:', data.token);
@@ -76,10 +65,8 @@ function Registration() {
             setIsSubmitting(false);
         }
     };
-
     const shouldShowError = (touched, focused, value, isValid) =>
         touched && !focused && value !== '' && !isValid;
-
     return (
         <Box
             sx={{
@@ -114,7 +101,6 @@ function Registration() {
                         zIndex: '-1',
                     }}
                 />
-
                 <Box
                     component="img"
                     src="/assets/mascots/bunny.png"
@@ -127,7 +113,6 @@ function Registration() {
                         zIndex: '-1',
                     }}
                 />
-
                 <Typography
                     variant="h4"
                     component="h1"
@@ -135,7 +120,6 @@ function Registration() {
                 >
                     Регистрация
                 </Typography>
-
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
                     <TextField
                         label="Имя пользователя"
@@ -158,11 +142,11 @@ function Registration() {
                         }
                         sx={{
                             '& .MuiInputLabel-root': { color: '#838488' },
-                            '& .MuiInputBase-input': { color: '#838488' },
+                            '& .MuiInputBase-input': { color: '#000000' },
                             '& .MuiOutlinedInput-root': { borderRadius: '20px' },
+                            '& .MuiInputBase-input::placeholder': { color: '#838488' },
                         }}
                     />
-
                     <TextField
                         label="Email"
                         variant="outlined"
@@ -182,11 +166,11 @@ function Registration() {
                         }
                         sx={{
                             '& .MuiInputLabel-root': { color: '#838488' },
-                            '& .MuiInputBase-input': { color: '#838488' },
+                            '& .MuiInputBase-input': { color: '#000000' },
                             '& .MuiOutlinedInput-root': { borderRadius: '20px' },
+                            '& .MuiInputBase-input::placeholder': { color: '#838488' },
                         }}
                     />
-
                     <TextField
                         label="Пароль"
                         type={showPassword ? 'text' : 'password'}
@@ -207,8 +191,9 @@ function Registration() {
                         }
                         sx={{
                             '& .MuiInputLabel-root': { color: '#838488' },
-                            '& .MuiInputBase-input': { color: '#838488' },
+                            '& .MuiInputBase-input': { color: '#000000' },
                             '& .MuiOutlinedInput-root': { borderRadius: '20px' },
+                            '& .MuiInputBase-input::placeholder': { color: '#838488' },
                         }}
                         InputProps={{
                             endAdornment: (
@@ -220,7 +205,6 @@ function Registration() {
                             ),
                         }}
                     />
-
                     <TextField
                         label="Подтверждение пароля"
                         type={showConfirmPassword ? 'text' : 'password'}
@@ -253,8 +237,9 @@ function Registration() {
                         }
                         sx={{
                             '& .MuiInputLabel-root': { color: '#838488' },
-                            '& .MuiInputBase-input': { color: '#838488' },
+                            '& .MuiInputBase-input': { color: '#000000' },
                             '& .MuiOutlinedInput-root': { borderRadius: '20px' },
+                            '& .MuiInputBase-input::placeholder': { color: '#838488' },
                         }}
                         InputProps={{
                             endAdornment: (
@@ -267,13 +252,11 @@ function Registration() {
                         }}
                     />
                 </Box>
-
                 {formError && (
                     <Typography color="error" sx={{ mt: 1, textAlign: 'center' }}>
                         {formError}
                     </Typography>
                 )}
-
                 <Button
                     type="submit"
                     variant="contained"
@@ -290,8 +273,7 @@ function Registration() {
                 >
                     Зарегистрироваться
                 </Button>
-
-                <Typography variant="body2" sx={{ textAlign: 'center' }}>
+                <Typography variant="body1" sx={{ textAlign: 'center' }}>
                     Уже есть аккаунт?{' '}
                     <Link component={RouterLink} to="/Login" underline="hover" sx={{ color: '#6C67EC' }}>
                         Войти

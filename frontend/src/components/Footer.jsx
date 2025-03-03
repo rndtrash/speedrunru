@@ -13,7 +13,7 @@ export default function Footer() {
                 mt: 4,
             }}
         >
-            <Typography variant="body2">
+            <Typography variant="body1">
                 © {new Date().getFullYear()} Спидраны. Все права защищены.
             </Typography>
         </Box>

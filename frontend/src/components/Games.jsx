@@ -198,7 +198,7 @@ export default function Games() {
                                                         />
                                                     )}
                                                     <Typography
-                                                        variant="body2"
+                                                        variant="body1"
                                                         sx={{
                                                             fontWeight: 700,
                                                             fontSize: '16px',
@@ -212,7 +212,7 @@ export default function Games() {
 
                                                 {record.time > 0 && (
                                                     <Typography
-                                                        variant="body2"
+                                                        variant="body1"
                                                         sx={{
                                                             fontWeight: 400,
                                                             fontSize: '14px',
@@ -227,7 +227,7 @@ export default function Games() {
 
                                             <Box sx={{ textAlign: 'right', mr: 2 }}>
                                                 <Typography
-                                                    variant="body2"
+                                                    variant="body1"
                                                     sx={{
                                                         fontWeight: 700,
                                                         fontSize: '16px',
@@ -237,7 +237,7 @@ export default function Games() {
                                                     {record.user}
                                                 </Typography>
                                                 <Typography
-                                                    variant="body2"
+                                                    variant="body1"
                                                     sx={{
                                                         fontWeight: 400,
                                                         fontSize: '14px',
