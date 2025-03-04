@@ -201,7 +201,7 @@ function Registration() {
                         error={shouldShowError(passwordTouched, passwordFocused, password, isPasswordValid)}
                         helperText={
                             shouldShowError(passwordTouched, passwordFocused, password, isPasswordValid)
-                                ? 'Минимум 8 символов, минимум 1 цифра и 1 буква'
+                                ? 'Минимум 8 символов, минимум 1 цифра и 1 латинская буква'
                                 : ''
                         }
                         sx={{
@@ -284,6 +284,9 @@ function Registration() {
                         borderRadius: '20px',
                         opacity: !isFormValid || isSubmitting ? 0.6 : 1,
                         marginTop: '33px',
+                        '&:hover': {
+                            backgroundColor: '#5749D0',
+                        },
                     }}
                 >
                     Зарегистрироваться

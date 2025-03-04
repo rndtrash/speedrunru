@@ -11,27 +11,20 @@ import {
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { passwordRegex, usernameRegex } from '../utils/regex.js';
 import { setAuthToken, findUserByUsername, setCurrentUser } from '../utils/authStore';
 
 function Login() {
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
-    const [usernameTouched, setUsernameTouched] = useState(false);
-    const [usernameFocused, setUsernameFocused] = useState(false);
     const [password, setPassword] = useState('');
-    const [passwordTouched, setPasswordTouched] = useState(false);
-    const [passwordFocused, setPasswordFocused] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [formError, setFormError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const isUsernameValid = usernameRegex.test(username);
-    const isPasswordValid = passwordRegex.test(password);
-    const isFormValid = username !== '' && password !== '';
+    const isFormValid = username.trim() !== '' && password.trim() !== '';
 
     const togglePasswordVisibility = () => {
-        setShowPassword((prev) => !prev);
+        setShowPassword(prev => !prev);
     };
 
     const handleSubmit = async (e) => {
@@ -40,11 +33,10 @@ function Login() {
         setIsSubmitting(true);
         setFormError('');
         try {
-            // лже JWT
             const token = 'MOCK_JWT_' + Math.random().toString(36).substr(2);
             const user = findUserByUsername(username);
             if (!user) {
-                throw new Error('Пользователь не найден. Зарегистрируйтесь.');
+                throw new Error('Неверный логин или пароль');
             }
             setAuthToken(token);
             setCurrentUser(user);
@@ -56,9 +48,6 @@ function Login() {
             setIsSubmitting(false);
         }
     };
-
-    const shouldShowError = (touched, focused, value, isValid) =>
-        touched && !focused && value !== '' && !isValid;
 
     return (
         <Box
@@ -120,19 +109,6 @@ function Login() {
                         placeholder="Введите имя пользователя"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        onFocus={() => setUsernameFocused(true)}
-                        onBlur={() => {
-                            setUsernameFocused(false);
-                            setUsernameTouched(true);
-                        }}
-                        error={
-                            shouldShowError(usernameTouched, usernameFocused, username, isUsernameValid)
-                        }
-                        helperText={
-                            shouldShowError(usernameTouched, usernameFocused, username, isUsernameValid)
-                                ? 'От 3 до 20 символов: латиница, кириллица, цифры, _, -'
-                                : ''
-                        }
                         sx={{
                             '& .MuiInputLabel-root': { color: '#838488' },
                             '& .MuiOutlinedInput-input': { color: '#000000' },
@@ -147,19 +123,6 @@ function Login() {
                         placeholder="Введите пароль"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        onFocus={() => setPasswordFocused(true)}
-                        onBlur={() => {
-                            setPasswordFocused(false);
-                            setPasswordTouched(true);
-                        }}
-                        error={
-                            shouldShowError(passwordTouched, passwordFocused, password, isPasswordValid)
-                        }
-                        helperText={
-                            shouldShowError(passwordTouched, passwordFocused, password, isPasswordValid)
-                                ? 'Минимум 8 символов, минимум 1 цифра и 1 буква'
-                                : ''
-                        }
                         sx={{
                             '& .MuiInputLabel-root': { color: '#838488' },
                             '& .MuiOutlinedInput-input': { color: '#000000' },
@@ -192,8 +155,11 @@ function Login() {
                         py: 1.5,
                         backgroundColor: '#6C67EC',
                         borderRadius: '20px',
-                        opacity: !isFormValid || isSubmitting ? 0.6 : 1,
+                        opacity: (!isFormValid || isSubmitting) ? 0.6 : 1,
                         marginTop: '33px',
+                        '&:hover': {
+                            backgroundColor: '#5749D0',
+                        },
                     }}
                 >
                     Войти

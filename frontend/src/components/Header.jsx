@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     AppBar,
     Toolbar,
@@ -17,10 +17,11 @@ import {
     Divider,
     InputAdornment,
     useMediaQuery,
-    useTheme, Typography,
+    useTheme,
+    Typography,
 } from '@mui/material';
 import { Search as SearchIcon, Menu as MenuIcon } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { isAuthorized, getCurrentUser, clearAuthToken, clearCurrentUser } from '../utils/authStore';
 
 function HideOnScroll(props) {
@@ -38,8 +39,15 @@ function HideOnScroll(props) {
 export default function Header(props) {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const [tabValue, setTabValue] = React.useState(0);
-    const [mobileOpen, setMobileOpen] = React.useState(false);
+    const location = useLocation();
+    const [tabValue, setTabValue] = useState(null);
+    const [mobileOpen, setMobileOpen] = useState(false);
+
+    useEffect(() => {
+        if (location.pathname === '/') {
+            setTabValue(null);
+        }
+    }, [location.pathname]);
 
     const handleTabChange = (event, newValue) => {
         setTabValue(newValue);
@@ -145,7 +153,7 @@ export default function Header(props) {
                                     >
                                         <Tab
                                             component={Link}
-                                            to="/"
+                                            to="/Games"
                                             label="Игры"
                                             sx={{
                                                 color: '#000000',
@@ -217,7 +225,7 @@ export default function Header(props) {
                                     }}
                                 />
                                 {authorized && currentUser ? (
-                                    <Box sx={{ display: 'flex', alignItems: 'center',ml: 10 }}>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', ml: 10 }}>
                                         <img
                                             src="/assets/defaultAvatar.png"
                                             alt="avatar"
