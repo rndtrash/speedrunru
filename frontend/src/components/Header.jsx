@@ -70,7 +70,7 @@ export default function Header(props) {
             </Box>
             <Divider />
             <List>
-                <ListItem component={Link} to="/">
+                <ListItem component={Link} to="/Games">
                     <ListItemText primary="Игры" />
                 </ListItem>
                 <ListItem component={Link} to="/discussions">
