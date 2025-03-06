@@ -1,5 +1,7 @@
 package ru.speedrun.speedrun.models
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+
 /**
  *  Роли для пользователя.
  *
@@ -24,5 +26,14 @@ enum class Role {
     /**
      * Заблокирован
      */
-    BANNED
+    BANNED;
+
+    fun getAuthorities(): List<SimpleGrantedAuthority> {
+        return when (this) {
+            ADMIN -> listOf(SimpleGrantedAuthority("ROLE_ADMIN"))
+            MODERATOR -> listOf(SimpleGrantedAuthority("ROLE_MODERATOR"))
+            USER -> listOf(SimpleGrantedAuthority("ROLE_USER"))
+            BANNED -> listOf()
+        }
+    }
 }
