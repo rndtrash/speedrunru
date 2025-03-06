@@ -1,6 +1,6 @@
 import { gameInfoMock } from './gameInfoMock';
 
-export const allGamesMock = Array.from({ length: 100 }, (_, index) => {
+export const allGamesMock = Array.from({ length: 10000 }, (_, index) => {
     const baseGame = gameInfoMock[index % gameInfoMock.length];
     return {
         name: baseGame.name,

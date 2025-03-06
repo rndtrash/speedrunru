@@ -38,7 +38,7 @@ export default function Index() {
                             }
                         />
                         <Route
-                            path="/games/:id"
+                            path="/Games/:id"
                             element={
                                 <Grow in timeout={1000}>
                                     <Box>

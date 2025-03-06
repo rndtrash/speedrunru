@@ -126,7 +126,7 @@ export default function GamesLatest() {
                             <Grid item xs={12} xl={6} key={index}>
                                 <Box
                                     component={Link}
-                                    to={`/games/${record.id}`}
+                                    to={`/Games/${record.id}`}
                                     sx={{
                                         display: 'flex',
                                         alignItems: 'center',
@@ -226,16 +226,25 @@ export default function GamesLatest() {
                                             </Box>
 
                                             <Box sx={{ textAlign: 'right', mr: 2 }}>
-                                                <Typography
-                                                    variant="body1"
-                                                    sx={{
-                                                        fontWeight: 700,
-                                                        fontSize: '16px',
-                                                        lineHeight: '21.82px',
-                                                    }}
-                                                >
-                                                    {record.user}
-                                                </Typography>
+                                                {/* Отображаем флаг слева от ника */}
+                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                    <Box
+                                                        component="img"
+                                                        src={record.flag}
+                                                        alt={record.flagAlt}
+                                                        sx={{ width: 24, height: 24 }}
+                                                    />
+                                                    <Typography
+                                                        variant="body1"
+                                                        sx={{
+                                                            fontWeight: 700,
+                                                            fontSize: '16px',
+                                                            lineHeight: '21.82px',
+                                                        }}
+                                                    >
+                                                        {record.user}
+                                                    </Typography>
+                                                </Box>
                                                 <Typography
                                                     variant="body1"
                                                     sx={{

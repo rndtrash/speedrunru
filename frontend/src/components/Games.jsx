@@ -1,9 +1,20 @@
-import React from 'react';
-import { Box, Typography, Grid, Card, CardActionArea } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Typography, Grid, Card, CardActionArea, Pagination } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { allGamesMock } from '../utils/allGamesMock';
 
 const Games = () => {
+    const [page, setPage] = useState(1);
+    const itemsPerPage = 30;
+
+    const handleChange = (event, value) => {
+        setPage(value);
+    };
+
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const currentGames = allGamesMock.slice(startIndex, endIndex);
+
     return (
         <Box sx={{ padding: "24px", backgroundColor: "#ffffff", borderRadius: "12px" }}>
             <Typography
@@ -21,8 +32,8 @@ const Games = () => {
             </Typography>
 
             <Grid container sx={{ columnGap: '32px', rowGap: '18px' }}>
-                {allGamesMock.map((game) => {
-                    let fontSize = game.name.length > 12 ? '14px' : '16px';
+                {currentGames.map((game) => {
+                    let fontSize;
                     switch (true) {
                         case (game.name.length > 16):
                             fontSize = "12px";
@@ -47,7 +58,7 @@ const Games = () => {
                             >
                                 <CardActionArea
                                     component={Link}
-                                    to={`/games/${game.gameId}`}
+                                    to={`/Games/${game.gameId}`}
                                     sx={{ height: '100%', display: "flex !important", flexDirection: "column" }}
                                 >
                                     <Box
@@ -99,6 +110,15 @@ const Games = () => {
                     );
                 })}
             </Grid>
+
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+                <Pagination
+                    count={Math.max(Math.ceil(allGamesMock.length / itemsPerPage),1)}
+                    page={page}
+                    onChange={handleChange}
+                    color="primary"
+                />
+            </Box>
         </Box>
     );
 };
