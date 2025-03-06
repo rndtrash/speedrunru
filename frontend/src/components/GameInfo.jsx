@@ -15,6 +15,7 @@ import {
 import { gameInfoMock } from '../utils/gameInfoMock';
 import { gameRecordsMock } from '../utils/gameRecordsMock';
 import { isAuthorized } from '../utils/authStore';
+import AuthModal from './AuthModal';
 
 function formatTime(ms) {
     if (ms <= 0) return '0:00:00';
@@ -46,6 +47,8 @@ export default function GameInfo() {
     const [sortField, setSortField] = useState(null);
     const [sortOrder, setSortOrder] = useState('asc');
     const authorized = isAuthorized();
+
+    const [openAuthModal, setOpenAuthModal] = useState(false);
 
     useEffect(() => {
         const timeoutId = setTimeout(() => {
@@ -116,6 +119,15 @@ export default function GameInfo() {
         );
     }
 
+    const handleSendRecord = () => {
+        if (!authorized) {
+            setOpenAuthModal(true);
+        } else {
+            // на будущее
+            alert('Открывается форма отправки записи ');
+        }
+    };
+
     return (
         <Container
             sx={{
@@ -151,17 +163,16 @@ export default function GameInfo() {
                         {gameInfo.name}
                     </Typography>
                     <Button
-                        disabled={!authorized}
+                        onClick={handleSendRecord}
                         sx={{
                             textTransform: 'none',
                             borderRadius: '20px',
-                            backgroundColor: authorized ? '#6C67EC' : '#6C67EC94',
+                            backgroundColor: '#6C67EC',
                             color: '#fff !important',
                             padding: '8px 16px',
                             '&:hover': {
-                                backgroundColor: authorized ? '#5749D0' : '#6C67EC94',
+                                backgroundColor: '#5749D0',
                                 color: '#fff',
-
                             },
                         }}
                     >
@@ -222,17 +233,36 @@ export default function GameInfo() {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell onClick={() => handleSort('player')} sx={{ cursor: 'pointer' }}>
+                            <TableCell
+                                onClick={() => handleSort('player')}
+                                sx={{ cursor: 'pointer' }}
+                            >
                                 <Typography variant="body2">Игрок</Typography>
                             </TableCell>
-                            <TableCell onClick={() => handleSort('time')} sx={{ cursor: 'pointer' }}>
+                            <TableCell
+                                onClick={() => handleSort('time')}
+                                sx={{ cursor: 'pointer' }}
+                            >
                                 <Typography variant="body2">
-                                    Время {sortField === 'time' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
+                                    Время{' '}
+                                    {sortField === 'time'
+                                        ? sortOrder === 'asc'
+                                            ? '↑'
+                                            : '↓'
+                                        : ''}
                                 </Typography>
                             </TableCell>
-                            <TableCell onClick={() => handleSort('submitted_at')} sx={{ cursor: 'pointer' }}>
+                            <TableCell
+                                onClick={() => handleSort('submitted_at')}
+                                sx={{ cursor: 'pointer' }}
+                            >
                                 <Typography variant="body2">
-                                    Дата {sortField === 'submitted_at' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
+                                    Дата{' '}
+                                    {sortField === 'submitted_at'
+                                        ? sortOrder === 'asc'
+                                            ? '↑'
+                                            : '↓'
+                                        : ''}
                                 </Typography>
                             </TableCell>
                         </TableRow>
@@ -244,16 +274,25 @@ export default function GameInfo() {
                                     <Typography variant="body3">{record.player}</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Typography variant="body3">{formatTime(record.time)}</Typography>
+                                    <Typography variant="body3">
+                                        {formatTime(record.time)}
+                                    </Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Typography variant="body3">{formatDate(record.submitted_at)}</Typography>
+                                    <Typography variant="body3">
+                                        {formatDate(record.submitted_at)}
+                                    </Typography>
                                 </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </Paper>
+
+            <AuthModal
+                open={openAuthModal}
+                onClose={() => setOpenAuthModal(false)}
+            />
         </Container>
     );
 }

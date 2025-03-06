@@ -152,7 +152,7 @@ function Registration() {
                         }
                         helperText={
                             shouldShowError(usernameTouched, usernameFocused, username, isUsernameValid)
-                                ? 'От 3 до 20 символов: латиница, кириллица, цифры, _, -'
+                                ? 'От 3 до 20 символов: латиница, кириллица, цифры. Должна быть хотя бы 1 буква или цифра'
                                 : ''
                         }
                         sx={{
