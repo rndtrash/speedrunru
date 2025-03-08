@@ -28,6 +28,8 @@ function HideOnScroll(props) {
     const { children, window: windowProp } = props;
     const trigger = useScrollTrigger({
         target: windowProp ? windowProp() : (typeof window !== 'undefined' ? window : undefined),
+        disableHysteresis: true,
+        threshold: 20,
     });
     return (
         <Slide appear={false} direction="down" in={!trigger}>
@@ -38,7 +40,7 @@ function HideOnScroll(props) {
 
 export default function Header(props) {
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const isMobile = useMediaQuery('(max-width:1050px)');
     const location = useLocation();
     const [tabValue, setTabValue] = useState(null);
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -282,7 +284,6 @@ export default function Header(props) {
                     onClose={handleDrawerToggle}
                     ModalProps={{ keepMounted: true }}
                     sx={{
-                        display: { xs: 'block', sm: 'none' },
                         '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 250 },
                     }}
                 >

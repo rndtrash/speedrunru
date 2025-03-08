@@ -93,7 +93,7 @@ export default function GamesLatest() {
                     backgroundPosition: 'center',
                     backgroundSize: 'contain',
                     backgroundRepeat: 'no-repeat',
-                    height: { xs: '100px', lg: '331px' },
+                    height: { xs: '20vw', lg: '331px' },
                     maxWidth: "1200px",
                     width: "100%",
                     mb: 4,

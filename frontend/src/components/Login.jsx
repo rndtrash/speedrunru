@@ -7,6 +7,8 @@ import {
     Link,
     IconButton,
     InputAdornment,
+    useMediaQuery,
+    useTheme,
 } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import Visibility from '@mui/icons-material/Visibility';
@@ -15,6 +17,9 @@ import { setAuthToken, findUserByUsername, setCurrentUser } from '../utils/authS
 
 function Login() {
     const navigate = useNavigate();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -71,30 +76,38 @@ function Login() {
                     maxWidth: '400px',
                 }}
             >
-                <Box
-                    component="img"
-                    src="/assets/mascots/sloth.png"
-                    alt="sloth"
-                    sx={{
-                        position: 'absolute',
-                        left: '30px',
-                        top: '50%',
-                        transform: 'translate(-100%, -50%)',
-                        zIndex: '-1',
-                    }}
-                />
-                <Box
-                    component="img"
-                    src="/assets/mascots/bunny.png"
-                    alt="bunny"
-                    sx={{
-                        position: 'absolute',
-                        right: '40px',
-                        top: '30%',
-                        transform: 'translate(100%, -50%)',
-                        zIndex: '-1',
-                    }}
-                />
+                {!isMobile && (
+                    <>
+                        <Box
+                            component="img"
+                            src="/assets/mascots/sloth.png"
+                            alt="sloth"
+                            sx={{
+                                position: 'absolute',
+                                left: '30px',
+                                top: '50%',
+                                transform: 'translate(-100%, -50%)',
+                                zIndex: '-1',
+                                maxWidth: '100%',
+                                height: 'auto',
+                            }}
+                        />
+                        <Box
+                            component="img"
+                            src="/assets/mascots/bunny.png"
+                            alt="bunny"
+                            sx={{
+                                position: 'absolute',
+                                right: '40px',
+                                top: '30%',
+                                transform: 'translate(100%, -50%)',
+                                zIndex: '-1',
+                                maxWidth: '100%',
+                                height: 'auto',
+                            }}
+                        />
+                    </>
+                )}
                 <Typography
                     variant="h4"
                     component="h1"
