@@ -4,6 +4,7 @@ import {
     Container,
     Typography,
     Grid,
+    Tooltip,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { speedrunMockData } from "../utils/mockData.js";
@@ -228,12 +229,14 @@ export default function GamesLatest() {
                                             <Box sx={{ textAlign: 'right', mr: 2 }}>
                                                 {/* Отображаем флаг слева от ника */}
                                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                                    <Box
-                                                        component="img"
-                                                        src={record.flag}
-                                                        alt={record.flagAlt}
-                                                        sx={{ width: 24, height: 24 }}
-                                                    />
+                                                    <Tooltip title={record.flagAlt}>
+                                                        <Box
+                                                            component="img"
+                                                            src={record.flag}
+                                                            alt={record.flagAlt}
+                                                            sx={{ width: 24, height: 24 }}
+                                                        />
+                                                    </Tooltip>
                                                     <Typography
                                                         variant="body1"
                                                         sx={{

@@ -12,6 +12,7 @@ import {
     TableBody,
     Paper,
     TablePagination,
+    Tooltip,
 } from '@mui/material';
 import { gameInfoMock } from '../utils/gameInfoMock';
 import { gameRecordsMock } from '../utils/gameRecordsMock';
@@ -294,17 +295,19 @@ export default function GameInfo() {
                                 >
                                     <TableCell>
                                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                            <Box
-                                                component="img"
-                                                src={record.player_country_flag}
-                                                alt={record.player_country_name}
-                                                sx={{
-                                                    width: 24,
-                                                    height: 24,
-                                                    mr: 1,
-                                                    borderRadius: '50%',
-                                                }}
-                                            />
+                                            <Tooltip title={record.player_country_name}>
+                                                <Box
+                                                    component="img"
+                                                    src={record.player_country_flag}
+                                                    alt={record.player_country_name}
+                                                    sx={{
+                                                        width: 24,
+                                                        height: 24,
+                                                        mr: 1,
+                                                        borderRadius: '50%',
+                                                    }}
+                                                />
+                                            </Tooltip>
                                             <Typography variant="body3">
                                                 {record.player_name}
                                             </Typography>
