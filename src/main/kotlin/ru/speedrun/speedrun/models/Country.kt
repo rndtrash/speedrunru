@@ -19,7 +19,6 @@ import java.util.UUID
 @Table(name = "countries")
 class Country(
     @Id
-    @GeneratedValue
     var id: UUID,
 
     var name: String,

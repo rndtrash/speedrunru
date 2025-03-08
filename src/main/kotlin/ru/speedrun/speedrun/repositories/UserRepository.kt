@@ -12,6 +12,6 @@ import java.util.UUID
  * @author Ivan Abramov
  */
 interface UserRepository: JpaRepository<User, UUID> {
-    @Query("SELECT u FROM User u WHERE u.email = ?1")
-    fun findByEmail(email: String?): Optional<User>
+    @Query("SELECT u FROM User u WHERE u.name = ?1")
+    fun findByName(name: String?): Optional<User>
 }

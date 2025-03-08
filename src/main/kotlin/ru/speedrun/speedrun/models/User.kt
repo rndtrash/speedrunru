@@ -1,6 +1,10 @@
 package ru.speedrun.speedrun.models
 
 import jakarta.persistence.*
+import org.springframework.boot.autoconfigure.task.TaskSchedulingProperties.Simple
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
 import java.util.Date
 import java.util.UUID
 
@@ -21,21 +25,34 @@ import java.util.UUID
 @Table(name = "users")
 class User(
     @Id
-    @GeneratedValue
     var id: UUID,
 
     var name: String,
 
     var email: String,
-
-    var password: String,
+    @Column(name = "password")
+    var userPassword: String,
 
     @Enumerated(EnumType.STRING)
     var role: Role,
 
+    @Column(name = "reg_date")
     var regDate: Date,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id", nullable = false)
     var country: Country
-)
+) : UserDetails {
+    override fun getAuthorities(): List<SimpleGrantedAuthority> {
+        return listOf(SimpleGrantedAuthority(role.name))
+    }
+
+    override fun getPassword(): String {
+       return userPassword
+    }
+
+
+    override fun getUsername(): String {
+        return name
+    }
+}

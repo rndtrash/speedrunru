@@ -27,13 +27,4 @@ enum class Role {
      * Заблокирован
      */
     BANNED;
-
-    fun getAuthorities(): List<SimpleGrantedAuthority> {
-        return when (this) {
-            ADMIN -> listOf(SimpleGrantedAuthority("ROLE_ADMIN"))
-            MODERATOR -> listOf(SimpleGrantedAuthority("ROLE_MODERATOR"))
-            USER -> listOf(SimpleGrantedAuthority("ROLE_USER"))
-            BANNED -> listOf()
-        }
-    }
 }
