@@ -11,6 +11,7 @@ import {
     TableCell,
     TableBody,
     Paper,
+    TablePagination,
 } from '@mui/material';
 import { gameInfoMock } from '../utils/gameInfoMock';
 import { gameRecordsMock } from '../utils/gameRecordsMock';
@@ -48,6 +49,8 @@ export default function GameInfo() {
     const [sortField, setSortField] = useState(null);
     const [sortOrder, setSortOrder] = useState('asc');
     const authorized = isAuthorized();
+    const [page, setPage] = useState(0);
+    const rowsPerPage = 10;
 
     const [openAuthModal, setOpenAuthModal] = useState(false);
     const [openSpeedRunSendModal, setOpenSpeedRunSendModal] = useState(false);
@@ -76,22 +79,29 @@ export default function GameInfo() {
 
     useEffect(() => {
         if (activeCategory) {
-            const categoryName = activeCategory === 1 ? 'Any%' : 'Все боссы';
-            setRecords([]);
             setTimeout(() => {
-                const filteredRecords = gameRecordsMock.filter(
-                    (record) => record.category === categoryName
+                const filteredRecords = gameRecordsMock.filter((_, idx) =>
+                    activeCategory === 1 ? idx % 2 === 0 : idx % 2 !== 0
                 );
                 setRecords(filteredRecords);
+                setPage(0);
             }, 500);
         }
     }, [activeCategory]);
 
     const handleSort = (field) => {
-        let order = 'asc';
-        if (sortField === field && sortOrder === 'asc') order = 'desc';
-        setSortField(field);
-        setSortOrder(order);
+        if (sortField !== field) {
+            setSortField(field);
+            setSortOrder('asc');
+        } else {
+            if (sortOrder === 'asc') {
+                setSortOrder('desc');
+            } else if (sortOrder === 'desc') {
+                setSortField(null);
+                setSortOrder('asc');
+            }
+        }
+        setPage(0);
     };
 
     const sortedRecords = useMemo(() => {
@@ -99,6 +109,7 @@ export default function GameInfo() {
         return [...records].sort((a, b) => {
             let aField = a[sortField];
             let bField = b[sortField];
+
             if (sortField === 'submitted_at') {
                 aField = new Date(aField);
                 bField = new Date(bField);
@@ -112,6 +123,10 @@ export default function GameInfo() {
             return 0;
         });
     }, [records, sortField, sortOrder]);
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
 
     if (!gameInfo) {
         return (
@@ -235,7 +250,7 @@ export default function GameInfo() {
                     <TableHead>
                         <TableRow>
                             <TableCell
-                                onClick={() => handleSort('player')}
+                                onClick={() => handleSort('player_name')}
                                 sx={{ cursor: 'pointer' }}
                             >
                                 <Typography variant="body2">Игрок</Typography>
@@ -269,37 +284,66 @@ export default function GameInfo() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {sortedRecords.map((record, idx) => (
-                            <TableRow key={idx}>
-                                <TableCell>
-                                    <Typography variant="body3">{record.player}</Typography>
-                                </TableCell>
-                                <TableCell>
-                                    <Typography variant="body3">
-                                        {formatTime(record.time)}
-                                    </Typography>
-                                </TableCell>
-                                <TableCell>
-                                    <Typography variant="body3">
-                                        {formatDate(record.submitted_at)}
-                                    </Typography>
-                                </TableCell>
-                            </TableRow>
-                        ))}
+                        {sortedRecords
+                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            .map((record, idx) => (
+                                <TableRow
+                                    key={idx}
+                                    onClick={() => window.open(record.run_link, '_blank')}
+                                    sx={{ cursor: 'pointer' }}
+                                >
+                                    <TableCell>
+                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                            <Box
+                                                component="img"
+                                                src={record.player_country_flag}
+                                                alt={record.player_country_name}
+                                                sx={{
+                                                    width: 24,
+                                                    height: 24,
+                                                    mr: 1,
+                                                    borderRadius: '50%',
+                                                }}
+                                            />
+                                            <Typography variant="body3">
+                                                {record.player_name}
+                                            </Typography>
+                                        </Box>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Typography variant="body3">
+                                            {formatTime(Number(record.time))}
+                                        </Typography>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Typography variant="body3">
+                                            {formatDate(record.submitted_at)}
+                                        </Typography>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
                     </TableBody>
                 </Table>
+                <TablePagination
+                    component="div"
+                    count={sortedRecords.length}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    rowsPerPage={rowsPerPage}
+                    rowsPerPageOptions={[]}
+                    labelDisplayedRows={({ from, to, count }) =>
+                        `${from}–${to} из ${count}`
+                    }
+                />
             </Paper>
 
-            <AuthModal
-                open={openAuthModal}
-                onClose={() => setOpenAuthModal(false)}
-            />
+            <AuthModal open={openAuthModal} onClose={() => setOpenAuthModal(false)} />
 
             <SpeedRunSendModal
                 open={openSpeedRunSendModal}
                 onClose={() => setOpenSpeedRunSendModal(false)}
                 categories={gameInfo?.categories || []}
-                activeCategory={gameInfo?.categories?.find(cat => cat.id === activeCategory)}
+                activeCategory={gameInfo?.categories?.find((cat) => cat.id === activeCategory)}
             />
         </Container>
     );
