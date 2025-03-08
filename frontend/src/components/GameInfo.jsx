@@ -298,6 +298,8 @@ export default function GameInfo() {
             <SpeedRunSendModal
                 open={openSpeedRunSendModal}
                 onClose={() => setOpenSpeedRunSendModal(false)}
+                categories={gameInfo?.categories || []}
+                activeCategory={gameInfo?.categories?.find(cat => cat.id === activeCategory)}
             />
         </Container>
     );
