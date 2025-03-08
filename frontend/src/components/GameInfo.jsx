@@ -16,6 +16,7 @@ import { gameInfoMock } from '../utils/gameInfoMock';
 import { gameRecordsMock } from '../utils/gameRecordsMock';
 import { isAuthorized } from '../utils/authStore';
 import AuthModal from './AuthModal';
+import SpeedRunSendModal from './SpeedRunSendModal';
 
 function formatTime(ms) {
     if (ms <= 0) return '0:00:00';
@@ -49,6 +50,7 @@ export default function GameInfo() {
     const authorized = isAuthorized();
 
     const [openAuthModal, setOpenAuthModal] = useState(false);
+    const [openSpeedRunSendModal, setOpenSpeedRunSendModal] = useState(false);
 
     useEffect(() => {
         const timeoutId = setTimeout(() => {
@@ -123,8 +125,7 @@ export default function GameInfo() {
         if (!authorized) {
             setOpenAuthModal(true);
         } else {
-            // на будущее
-            alert('Открывается форма отправки записи ');
+            setOpenSpeedRunSendModal(true);
         }
     };
 
@@ -292,6 +293,11 @@ export default function GameInfo() {
             <AuthModal
                 open={openAuthModal}
                 onClose={() => setOpenAuthModal(false)}
+            />
+
+            <SpeedRunSendModal
+                open={openSpeedRunSendModal}
+                onClose={() => setOpenSpeedRunSendModal(false)}
             />
         </Container>
     );
