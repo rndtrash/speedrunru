@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     AppBar,
     Toolbar,
@@ -17,12 +17,14 @@ import {
     Divider,
     InputAdornment,
     useMediaQuery,
-    useTheme,
     Typography,
+    Paper,
+    ListItemButton,
 } from '@mui/material';
 import { Search as SearchIcon, Menu as MenuIcon } from '@mui/icons-material';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { isAuthorized, getCurrentUser, clearAuthToken, clearCurrentUser } from '../utils/authStore';
+import { allGamesMock } from '../utils/allGamesMock';
 
 function HideOnScroll(props) {
     const { children, window: windowProp } = props;
@@ -39,17 +41,48 @@ function HideOnScroll(props) {
 }
 
 export default function Header(props) {
-    const theme = useTheme();
     const isMobile = useMediaQuery('(max-width:1050px)');
     const location = useLocation();
+    const navigate = useNavigate();
     const [tabValue, setTabValue] = useState(null);
     const [mobileOpen, setMobileOpen] = useState(false);
 
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredGames, setFilteredGames] = useState([]);
+    const searchBoxRef = useRef(null);
+
     useEffect(() => {
-        if (location.pathname === '/') {
-            setTabValue(null);
+        if (searchTerm.trim() === '') {
+            setFilteredGames([]);
+        } else {
+            const filtered = allGamesMock.filter(game =>
+                game.name.toLowerCase().startsWith(searchTerm.toLowerCase())
+            );
+            const uniqueGames = [];
+            const seenNames = new Set();
+            filtered.forEach(game => {
+                if (!seenNames.has(game.name)) {
+                    seenNames.add(game.name);
+                    uniqueGames.push(game);
+                }
+            });
+            setFilteredGames(uniqueGames.slice(0, 10));
         }
-    }, [location.pathname]);
+    }, [searchTerm]);
+
+
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (searchBoxRef.current && !searchBoxRef.current.contains(event.target)) {
+                setFilteredGames([]);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     const handleTabChange = (event, newValue) => {
         setTabValue(newValue);
@@ -63,6 +96,16 @@ export default function Header(props) {
         clearAuthToken();
         clearCurrentUser();
         window.location.href = '/login';
+    };
+
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
+    const handleGameSelect = (gameId) => {
+        setSearchTerm('');
+        setFilteredGames([]);
+        navigate(`/games/${gameId}`);
     };
 
     const drawer = (
@@ -200,32 +243,54 @@ export default function Header(props) {
                                         />
                                     </Tabs>
                                 </Box>
-                                <TextField
-                                    variant="outlined"
-                                    size="small"
-                                    placeholder="Поиск"
-                                    sx={{
-                                        bgcolor: 'white',
-                                        mr: '16px',
-                                        '& .MuiOutlinedInput-root': {
-                                            padding: 0,
-                                            height: 36,
+                                <Box sx={{ position: 'relative', mr: '16px' }} ref={searchBoxRef}>
+                                    <TextField
+                                        variant="outlined"
+                                        size="small"
+                                        placeholder="Поиск"
+                                        value={searchTerm}
+                                        onChange={handleSearchChange}
+                                        sx={{
+                                            bgcolor: 'white',
+                                            '& .MuiOutlinedInput-root': {
+                                                padding: 0,
+                                                height: 36,
+                                                borderRadius: '20px',
+                                            },
+                                            border: '1px solid #DCDBE0',
                                             borderRadius: '20px',
-                                        },
-                                        border: '1px solid #DCDBE0',
-                                        borderRadius: '20px',
-                                    }}
-                                    InputProps={{
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                <SearchIcon sx={{ color: 'action.active', fontSize: '20px', marginLeft: '10px' }} />
-                                            </InputAdornment>
-                                        ),
-                                        sx: {
-                                            paddingLeft: '8px',
-                                        },
-                                    }}
-                                />
+                                        }}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <SearchIcon sx={{ color: 'action.active', fontSize: '20px', marginLeft: '10px' }} />
+                                                </InputAdornment>
+                                            ),
+                                            sx: {
+                                                paddingLeft: '8px',
+                                            },
+                                        }}
+                                    />
+                                    {filteredGames.length > 0 && (
+                                        <Paper
+                                            sx={{
+                                                position: 'absolute',
+                                                top: '110%',
+                                                left: 0,
+                                                right: 0,
+                                                maxHeight: 300,
+                                                overflowY: 'auto',
+                                                zIndex: 10,
+                                            }}
+                                        >
+                                            {filteredGames.map(game => (
+                                                <ListItemButton key={game.gameId} onClick={() => handleGameSelect(game.gameId)}>
+                                                    <ListItemText primary={game.name} />
+                                                </ListItemButton>
+                                            ))}
+                                        </Paper>
+                                    )}
+                                </Box>
                                 {authorized && currentUser ? (
                                     <Box sx={{ display: 'flex', alignItems: 'center', ml: 10 }}>
                                         <img

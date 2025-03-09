@@ -7,7 +7,7 @@ import {
     Tooltip,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { speedrunMockData } from "../utils/mockData.js";
+import { speedrunMockResponse } from "../utils/mockData.js";
 
 function getTrophyIcon(place) {
     switch (place) {
@@ -68,12 +68,12 @@ export default function GamesLatest() {
     const [records, setRecords] = useState([]);
 
     useEffect(() => {
-        const mockFetchRecords = async () => {
-            await new Promise((resolve) => setTimeout(resolve, 500));
-            setRecords(speedrunMockData);
+        // более корректный запрос
+        const fetchRecords = async () => {
+            await new Promise(resolve => setTimeout(resolve, 500));
+            setRecords(speedrunMockResponse.run_list);
         };
-
-        mockFetchRecords();
+        fetchRecords();
     }, []);
 
     return (
@@ -143,8 +143,8 @@ export default function GamesLatest() {
                                 >
                                     <Box
                                         component="img"
-                                        src={record.icon}
-                                        alt={record.game}
+                                        src={record.game_icon}
+                                        alt={record.game_name}
                                         sx={{
                                             maxWidth: '103px',
                                             maxHeight: '120px',
@@ -179,7 +179,7 @@ export default function GamesLatest() {
                                                 color: '#000000',
                                             }}
                                         >
-                                            {record.game}
+                                            {record.game_name}
                                         </Typography>
 
                                         <Box
@@ -207,10 +207,9 @@ export default function GamesLatest() {
                                                             ml: trophyIcon ? 0.5 : 0,
                                                         }}
                                                     >
-                                                        {placeToString(record.place)}
+                                                        {placeToString(record.place)}, {record.category_name}
                                                     </Typography>
                                                 </Box>
-
                                                 {record.time > 0 && (
                                                     <Typography
                                                         variant="body1"
@@ -221,19 +220,18 @@ export default function GamesLatest() {
                                                             mt: 1,
                                                         }}
                                                     >
-                                                        {formatTime(record.time)}
+                                                        {formatTime(Number(record.time))}
                                                     </Typography>
                                                 )}
                                             </Box>
 
                                             <Box sx={{ textAlign: 'right', mr: 2 }}>
-                                                {/* Отображаем флаг слева от ника */}
                                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                                    <Tooltip title={record.flagAlt}>
+                                                    <Tooltip title={record.country_name}>
                                                         <Box
                                                             component="img"
-                                                            src={record.flag}
-                                                            alt={record.flagAlt}
+                                                            src={record.country_flag}
+                                                            alt={record.country_name}
                                                             sx={{ width: 24, height: 24 }}
                                                         />
                                                     </Tooltip>
@@ -245,7 +243,7 @@ export default function GamesLatest() {
                                                             lineHeight: '21.82px',
                                                         }}
                                                     >
-                                                        {record.user}
+                                                        {record.user_name}
                                                     </Typography>
                                                 </Box>
                                                 <Typography
@@ -257,7 +255,7 @@ export default function GamesLatest() {
                                                         mt: 1,
                                                     }}
                                                 >
-                                                    {formatDate(record.date)}
+                                                    {formatDate(record.created_at)}
                                                 </Typography>
                                             </Box>
                                         </Box>
