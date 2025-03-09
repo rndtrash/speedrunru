@@ -21,13 +21,14 @@ import AuthModal from './AuthModal';
 import SpeedRunSendModal from './SpeedRunSendModal';
 
 function formatTime(ms) {
-    if (ms <= 0) return '0:00:00';
+    if (ms <= 0) return '0:00:00.000';
     const hours = Math.floor(ms / 3600000);
     const minutes = Math.floor((ms % 3600000) / 60000);
     const seconds = Math.floor((ms % 60000) / 1000);
-    return `${hours.toString().padStart(1, '0')}:${minutes
+    const milliseconds = ms % 1000;
+    return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds
         .toString()
-        .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        .padStart(2, '0')}.${milliseconds.toString().padStart(3, '0')}`;
 }
 
 function formatDate(dateStr) {
