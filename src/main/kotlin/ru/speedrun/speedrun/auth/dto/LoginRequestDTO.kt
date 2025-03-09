@@ -1,6 +1,6 @@
 package ru.speedrun.speedrun.auth.dto
 
-data class AuthenticationRequestDTO (
-    var name: String,
+data class LoginRequestDTO (
+    var username: String,
     var password: String
 )

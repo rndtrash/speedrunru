@@ -40,8 +40,8 @@ class User(
     var regDate: Date,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id", nullable = false)
-    var country: Country
+    @JoinColumn(name = "country_id", nullable = true)
+    var country: Country?
 ) : UserDetails {
     override fun getAuthorities(): List<SimpleGrantedAuthority> {
         return listOf(SimpleGrantedAuthority(role.name))

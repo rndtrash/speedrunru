@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import ru.speedrun.speedrun.auth.dto.AuthenticationRequestDTO
+import ru.speedrun.speedrun.auth.dto.LoginRequestDTO
 import ru.speedrun.speedrun.auth.dto.RegisterRequestDTO
 import ru.speedrun.speedrun.auth.dto.ResponseDTO
 
@@ -23,7 +23,7 @@ class AuthenticationController(
 
     @PostMapping("/authenticate")
     fun register(
-        @RequestBody request: AuthenticationRequestDTO
+        @RequestBody request: LoginRequestDTO
     ): ResponseEntity<ResponseDTO?> {
         return ResponseEntity.ok(authenticationService.authenticate(request))
     }
