@@ -51,6 +51,19 @@ export default function Header(props) {
     const [filteredGames, setFilteredGames] = useState([]);
     const searchBoxRef = useRef(null);
 
+    // Определяем активную вкладку по пути
+    useEffect(() => {
+        if (location.pathname.startsWith('/Games')) {
+            setTabValue(0);
+        } else if (location.pathname.startsWith('/discussions')) {
+            setTabValue(1);
+        } else if (location.pathname.startsWith('/help')) {
+            setTabValue(2);
+        } else {
+            setTabValue(null);
+        }
+    }, [location.pathname]);
+
     useEffect(() => {
         if (searchTerm.trim() === '') {
             setFilteredGames([]);
@@ -69,8 +82,6 @@ export default function Header(props) {
             setFilteredGames(uniqueGames.slice(0, 10));
         }
     }, [searchTerm]);
-
-
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -285,6 +296,11 @@ export default function Header(props) {
                                         >
                                             {filteredGames.map(game => (
                                                 <ListItemButton key={game.gameId} onClick={() => handleGameSelect(game.gameId)}>
+                                                    <img
+                                                        src={game.image}
+                                                        alt={game.name}
+                                                        style={{ width:75, height: 75, marginRight: 8, borderRadius: '4px',objectFit:"contain" }}
+                                                    />
                                                     <ListItemText primary={game.name} />
                                                 </ListItemButton>
                                             ))}
