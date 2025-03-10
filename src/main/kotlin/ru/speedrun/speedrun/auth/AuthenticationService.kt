@@ -1,6 +1,7 @@
 package ru.speedrun.speedrun.auth
 
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -9,12 +10,14 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import ru.speedrun.speedrun.auth.dto.LoginRequestDTO
+import ru.speedrun.speedrun.auth.dto.RefreshRequestDTO
 import ru.speedrun.speedrun.auth.dto.RegisterRequestDTO
 import ru.speedrun.speedrun.auth.dto.ResponseDTO
 import ru.speedrun.speedrun.config.JwtService
 import ru.speedrun.speedrun.models.Role
 import ru.speedrun.speedrun.models.User
 import ru.speedrun.speedrun.repositories.UserRepository
+import ru.speedrun.speedrun.service.RefreshTokenService
 import java.util.*
 
 @Service
@@ -22,7 +25,8 @@ class AuthenticationService(
     private val userRepository: UserRepository,
     private val jwtService: JwtService,
     private val manager: AuthenticationManager,
-    private val passwordEncoder: PasswordEncoder
+    private val passwordEncoder: PasswordEncoder,
+    private val refreshTokenService: RefreshTokenService
 ) {
 
     fun register(request: RegisterRequestDTO): ResponseDTO {
@@ -57,9 +61,11 @@ class AuthenticationService(
         )
         userRepository.save(user)
         val jwtToken = jwtService.generateToken(user)
+        val refreshToken = refreshTokenService.createRefreshToken(user)
         return ResponseDTO(
             message = "Регистрация успешна",
             token = jwtToken,
+            refreshToken = refreshToken.token
         )
     }
 
@@ -70,15 +76,37 @@ class AuthenticationService(
                 .orElseThrow { ResponseStatusException(HttpStatus.UNAUTHORIZED, "Неверное имя пользователя или пароль") }
             manager.authenticate(UsernamePasswordAuthenticationToken(request.username, request.password))
             val jwtToken = jwtService.generateToken(user)
+            val refreshToken = refreshTokenService.createRefreshToken(user)
             return ResponseDTO(
                 message = "Вход выполнен успешно",
-                token = jwtToken
+                token = jwtToken,
+                refreshToken = refreshToken.token
+
             )
         } catch (ex: BadCredentialsException) {
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Неверное имя пользователя или пароль")
         } catch (ex: AuthenticationException) {
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Неверное имя пользователя или пароль")
         }
+    }
+
+    fun refresh(request: RefreshRequestDTO) : ResponseEntity<ResponseDTO> {
+        val refreshToken = refreshTokenService.verifyRefreshToken(request.refreshToken)
+        val user = refreshToken.user
+        val newAccessToken = jwtService.generateToken(user)
+        return ResponseEntity.ok(
+            ResponseDTO(
+            token = newAccessToken,
+            refreshToken = refreshToken.token,
+            message = "Refresh Success"
+        )
+        )
+    }
+
+    fun logout(token: String) {
+        val username = jwtService.extractUsername(token.substring(7))
+        val user = userRepository.findByName(username).orElseThrow { RuntimeException("User not found") }
+        refreshTokenService.deleteByUser(user)
     }
 
 }

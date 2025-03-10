@@ -29,7 +29,7 @@ databaseChangeLog:
               - column:
                   name: expiry_date
                   remarks: Дата
-                  type: datetime
+                  type: date
                   constraints:
                     nullable: false
         - addForeignKeyConstraint:
