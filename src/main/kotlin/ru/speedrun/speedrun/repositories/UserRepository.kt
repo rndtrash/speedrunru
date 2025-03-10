@@ -17,4 +17,7 @@ interface UserRepository: JpaRepository<User, UUID> {
 
     @Query("SELECT u FROM User u WHERE u.email = ?1")
     fun findByEmail(email: String?): Optional<User>
+
+    fun existsByName(name: String): Boolean
+    fun existsByEmail(email: String): Boolean
 }

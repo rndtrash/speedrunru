@@ -31,19 +31,19 @@ class AuthenticationService(
         val emailRegex = Regex("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")
         val passwordRegex = Regex("^(?=.*[0-9])(?=.*[a-zA-Z]).{8,}$")
 
-        if (userRepository.findByName(request.username).isPresent) {
-            throw ResponseStatusException(HttpStatus.CONFLICT, "Имя пользователя уже занято")
-        }
-        if (userRepository.findByEmail(request.email).isPresent) {
-            throw ResponseStatusException(HttpStatus.CONFLICT, "Email уже зарегистрирован")
-        }
-
         require(usernameRegex.matches(request.username)) {
             "Имя пользователя должно содержать от 3 до 20 символов и включать буквы, цифры, _ или -"
         }
         require(emailRegex.matches(request.email)) { "Некорректный формат email" }
         require(passwordRegex.matches(request.password)) {
             "Пароль должен содержать минимум 8 символов, хотя бы одну букву и одну цифру"
+        }
+
+        if (userRepository.existsByName(request.username)) {
+            throw ResponseStatusException(HttpStatus.CONFLICT, "Имя пользователя уже занято")
+        }
+        if (userRepository.existsByEmail(request.email)) {
+            throw ResponseStatusException(HttpStatus.CONFLICT, "Email уже зарегистрирован")
         }
 
         val user = User(

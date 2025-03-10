@@ -10,7 +10,7 @@ import ru.speedrun.speedrun.auth.dto.RegisterRequestDTO
 import ru.speedrun.speedrun.auth.dto.ResponseDTO
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/auth")
 class AuthenticationController(
     private val authenticationService: AuthenticationService
 ) {
