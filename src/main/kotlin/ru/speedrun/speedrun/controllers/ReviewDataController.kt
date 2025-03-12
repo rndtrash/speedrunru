@@ -35,7 +35,7 @@ class ReviewDataController(
         return ResponseEntity.status(201).body(createdReview)
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     fun updateReview(@PathVariable id: UUID, @RequestBody request: ReviewDataRequestDTO): ResponseEntity<ReviewData> {
         val updatedReview = reviewDataService.updateReview(id, request)
         return ResponseEntity.ok(updatedReview)

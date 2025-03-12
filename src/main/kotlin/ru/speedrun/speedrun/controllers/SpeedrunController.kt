@@ -1,9 +1,10 @@
 package ru.speedrun.speedrun.controllers
 
 import ru.speedrun.speedrun.services.SpeedrunService
-import ru.speedrun.speedrun.dto.SpeedrunRequestDTO
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import ru.speedrun.speedrun.dto.SpeedrunRequestGetDTO
+import ru.speedrun.speedrun.dto.SpeedrunRequestPostDTO
 import ru.speedrun.speedrun.dto.toRequestDTO
 import ru.speedrun.speedrun.models.Speedrun
 import java.util.UUID
@@ -14,13 +15,13 @@ class SpeedrunController(
     private val speedrunService: SpeedrunService
 ) {
     @GetMapping
-    fun getAllSpeedruns(): ResponseEntity<List<SpeedrunRequestDTO>> {
+    fun getAllSpeedruns(): ResponseEntity<List<SpeedrunRequestGetDTO>> {
         val speedruns = speedrunService.getAllSpeedruns().map { it.toRequestDTO() }
         return ResponseEntity.ok(speedruns)
     }
 
     @GetMapping("/{id}")
-    fun getSpeedrunById(@PathVariable id: UUID): ResponseEntity<SpeedrunRequestDTO> {
+    fun getSpeedrunById(@PathVariable id: UUID): ResponseEntity<SpeedrunRequestGetDTO> {
         val speedrun = speedrunService.getSpeedrunById(id)
         return if (speedrun != null) {
             ResponseEntity.ok(speedrun.toRequestDTO())
@@ -30,13 +31,13 @@ class SpeedrunController(
     }
 
     @PostMapping
-    fun createSpeedrun(@RequestBody request: SpeedrunRequestDTO): ResponseEntity<Speedrun> {
+    fun createSpeedrun(@RequestBody request: SpeedrunRequestPostDTO): ResponseEntity<Speedrun> {
         val createdSpeedrun = speedrunService.createSpeedrun(request)
         return ResponseEntity.status(201).body(createdSpeedrun)
     }
 
-    @PutMapping("/{id}")
-    fun updateSpeedrun(@PathVariable id: UUID, @RequestBody request: SpeedrunRequestDTO): ResponseEntity<Speedrun> {
+    @PatchMapping("/{id}")
+    fun updateSpeedrun(@PathVariable id: UUID, @RequestBody request: SpeedrunRequestPostDTO): ResponseEntity<Speedrun> {
         val updatedSpeedrun = speedrunService.updateSpeedrun(id, request)
         return ResponseEntity.ok(updatedSpeedrun)
     }
