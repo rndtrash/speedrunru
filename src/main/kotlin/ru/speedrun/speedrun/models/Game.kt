@@ -22,7 +22,4 @@ class Game(
 
     @Column(name = "image_link", length = 64)
     var imageLink: String?,
-
-    @OneToMany(mappedBy = "game", fetch = FetchType.LAZY)
-    var categories: List<Category>? = null
 )

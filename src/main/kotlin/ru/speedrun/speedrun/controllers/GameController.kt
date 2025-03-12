@@ -2,11 +2,9 @@ package ru.speedrun.speedrun.controllers
 
 import ru.speedrun.speedrun.models.Game
 import ru.speedrun.speedrun.services.GameService
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import ru.speedrun.speedrun.dto.GameRequestGetDTO
-import ru.speedrun.speedrun.dto.GameRequestPostDTO
-import ru.speedrun.speedrun.dto.toResponseDTO
+import ru.speedrun.speedrun.dto.games.CreateGameDTO
+import ru.speedrun.speedrun.dto.games.UpdateGameDTO
 import java.time.LocalDate
 import java.util.*
 
@@ -14,37 +12,19 @@ import java.util.*
 @RequestMapping("/api/game")
 class GameController(private val gameService: GameService) {
     @GetMapping
-    fun getAllGames(@RequestParam(required = false) minReleaseDate: LocalDate?): ResponseEntity<Map<String, List<GameRequestGetDTO>>> {
-        val games = gameService.getAllGames(minReleaseDate)
-        val response = mapOf("games" to games.map { it.toResponseDTO() })
-        return ResponseEntity.ok(response)
-    }
+    fun getAllGames(@RequestParam(required = false) minReleaseDate: LocalDate?): List<Game> = gameService.getAllGames(minReleaseDate)
 
     @GetMapping("/{id}")
-    fun getGameById(@PathVariable id: UUID): ResponseEntity<Map<String, GameRequestGetDTO?>> {
-        val game = gameService.getGameById(id)
-        return if (game != null) {
-            ResponseEntity.ok(mapOf("game" to game.toResponseDTO()))
-        } else {
-            ResponseEntity.status(404).body(emptyMap())
-        }
-    }
+    fun getGameById(@PathVariable id: UUID): Game? = gameService.getGameById(id)
 
     @PostMapping
-    fun createGame(@RequestBody request: GameRequestPostDTO): ResponseEntity<Game> {
-        val createdGame = gameService.createGame(request)
-        return ResponseEntity.status(201).body(createdGame)
-    }
+    fun createGame(@RequestBody gameDTO: CreateGameDTO): Game = gameService.createGame(gameDTO)
 
-    @PatchMapping("/{id}")
-    fun updateGame(@PathVariable id: UUID, @RequestBody updatedGame: Game): ResponseEntity<Game> {
-        val game = gameService.updateGame(id, updatedGame)
-        return ResponseEntity.ok(game)
-    }
+    @PatchMapping
+    fun updateGame(@RequestBody gameDto: UpdateGameDTO): Game = gameService.updateGame(gameDto)
 
     @DeleteMapping("/{id}")
-    fun deleteGame(@PathVariable id: UUID): ResponseEntity<Void> {
+    fun deleteGame(@PathVariable id: UUID) {
         gameService.deleteGame(id)
-        return ResponseEntity.noContent().build()
     }
 }

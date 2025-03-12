@@ -4,7 +4,8 @@ import ru.speedrun.speedrun.models.Category
 import ru.speedrun.speedrun.repositories.GameRepository
 import ru.speedrun.speedrun.repositories.CategoryRepository
 import org.springframework.stereotype.Service
-import ru.speedrun.speedrun.dto.CategoryRequestPostDTO
+import ru.speedrun.speedrun.dto.categories.CreateCategoryDTO
+import ru.speedrun.speedrun.dto.categories.UpdateCategoryDTO
 import java.util.UUID
 
 @Service
@@ -20,7 +21,7 @@ class CategoryService(
         return categoryRepository.findById(id).orElse(null)
     }
 
-    fun createCategory(request: CategoryRequestPostDTO): Category {
+    fun createCategory(request: CreateCategoryDTO): Category {
         val game = gameRepository.findById(request.gameId).get()
         val category = Category(
             id = UUID.randomUUID(),
@@ -31,14 +32,15 @@ class CategoryService(
         return categoryRepository.save(category)
     }
 
-    fun updateCategory(id: UUID, request: CategoryRequestPostDTO): Category {
-        val existingCategory = categoryRepository.findById(id).get()
-        val game = gameRepository.findById(request.gameId).get()
-
-        existingCategory.name = request.name
-        existingCategory.description = request.description
-        existingCategory.game = game
-        return categoryRepository.save(existingCategory)
+    fun updateCategory(request: UpdateCategoryDTO): Category {
+        val category = categoryRepository.findById(request.id).get()
+        val game = gameRepository.findById(request.gameId!!).get()
+        request.name?.let { category.name = it }
+        request.description?.let { category.description = it }
+        if (gameRepository.existsById(request.gameId)) {
+            category.game = gameRepository.findById(request.gameId).get()
+        }
+        return categoryRepository.save(category)
     }
 
     fun deleteCategory(id: UUID) {
