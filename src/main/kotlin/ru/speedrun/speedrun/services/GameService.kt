@@ -3,6 +3,8 @@ package ru.speedrun.speedrun.services
 import ru.speedrun.speedrun.models.Game
 import ru.speedrun.speedrun.repositories.GameRepository
 import org.springframework.stereotype.Service
+import ru.speedrun.speedrun.dto.games.CreateGameDTO
+import ru.speedrun.speedrun.dto.games.UpdateGameDTO
 import java.time.LocalDate
 import java.util.UUID
 
@@ -21,18 +23,24 @@ class GameService(private val gameRepository: GameRepository) {
         return gameRepository.findById(id).orElse(null)
     }
 
-    fun createGame(game: Game): Game {
+    fun createGame(gameDTO: CreateGameDTO): Game {
+        val game = Game(
+            id = UUID.randomUUID(),
+            name = gameDTO.name,
+            description = gameDTO.description,
+            releaseDate = gameDTO.releaseDate,
+            imageLink = gameDTO.imageLink
+        )
         return gameRepository.save(game)
     }
 
-    fun updateGame(id: UUID, updatedGame: Game): Game? {
-        val existingGame = gameRepository.findById(id).get()
-
-        existingGame.name = updatedGame.name
-        existingGame.description = updatedGame.description
-        existingGame.releaseDate = updatedGame.releaseDate
-        existingGame.imageLink = updatedGame.imageLink
-        return gameRepository.save(existingGame)
+    fun updateGame(gameDTO: UpdateGameDTO): Game {
+        val game = gameRepository.findById(gameDTO.id).get()
+        gameDTO.name?.let {game.name = it}
+        gameDTO.description?.let { game.description = it }
+        gameDTO.releaseDate?.let { game.releaseDate = it }
+        gameDTO.imageLink?.let { game.imageLink = it }
+        return gameRepository.save(game)
     }
 
     fun deleteGame(id: UUID) {

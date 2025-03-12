@@ -6,7 +6,7 @@ import java.util.UUID
 
 @Entity
 @Table(name = "games")
-data class Game(
+class Game(
     @Id
     @Column(name = "id", nullable = false)
     var id: UUID = UUID.randomUUID(),
@@ -22,7 +22,4 @@ data class Game(
 
     @Column(name = "image_link", length = 64)
     var imageLink: String?,
-
-    @OneToMany(mappedBy = "game", fetch = FetchType.LAZY)
-    var categories: List<Category>? = null
 )
