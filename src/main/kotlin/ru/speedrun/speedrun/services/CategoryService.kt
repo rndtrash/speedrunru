@@ -4,7 +4,7 @@ import ru.speedrun.speedrun.models.Category
 import ru.speedrun.speedrun.repositories.GameRepository
 import ru.speedrun.speedrun.repositories.CategoryRepository
 import org.springframework.stereotype.Service
-import ru.speedrun.speedrun.dto.CategoryRequestMainDTO
+import ru.speedrun.speedrun.dto.CategoryRequestPostDTO
 import java.util.UUID
 
 @Service
@@ -20,9 +20,10 @@ class CategoryService(
         return categoryRepository.findById(id).orElse(null)
     }
 
-    fun createCategory(request: CategoryRequestMainDTO): Category {
+    fun createCategory(request: CategoryRequestPostDTO): Category {
         val game = gameRepository.findById(request.gameId).get()
         val category = Category(
+            id = UUID.randomUUID(),
             game = game,
             name = request.name,
             description = request.description
@@ -30,7 +31,7 @@ class CategoryService(
         return categoryRepository.save(category)
     }
 
-    fun updateCategory(id: UUID, request: CategoryRequestMainDTO): Category {
+    fun updateCategory(id: UUID, request: CategoryRequestPostDTO): Category {
         val existingCategory = categoryRepository.findById(id).get()
         val game = gameRepository.findById(request.gameId).get()
 

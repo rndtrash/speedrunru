@@ -3,6 +3,7 @@ package ru.speedrun.speedrun.services
 import ru.speedrun.speedrun.models.Game
 import ru.speedrun.speedrun.repositories.GameRepository
 import org.springframework.stereotype.Service
+import ru.speedrun.speedrun.dto.GameRequestPostDTO
 import java.time.LocalDate
 import java.util.UUID
 
@@ -21,7 +22,14 @@ class GameService(private val gameRepository: GameRepository) {
         return gameRepository.findById(id).orElse(null)
     }
 
-    fun createGame(game: Game): Game {
+    fun createGame(request: GameRequestPostDTO): Game {
+        val game = Game(
+            id = UUID.randomUUID(),
+            name = request.game_name,
+            imageLink = request.game_icon,
+            description = request.game_description,
+            releaseDate = request.game_release_date
+        )
         return gameRepository.save(game)
     }
 

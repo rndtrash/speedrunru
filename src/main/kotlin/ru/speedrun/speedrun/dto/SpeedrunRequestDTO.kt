@@ -4,7 +4,7 @@ import ru.speedrun.speedrun.models.Speedrun
 import java.time.LocalDateTime
 import java.util.UUID
 
-data class SpeedrunRequestDTO(
+data class SpeedrunRequestGetDTO(
     val id: UUID,
     val categoryId: UUID,
     val authorId: UUID,
@@ -14,8 +14,17 @@ data class SpeedrunRequestDTO(
     val status: String
 )
 
-fun Speedrun.toRequestDTO(): SpeedrunRequestDTO {
-    return SpeedrunRequestDTO(
+data class SpeedrunRequestPostDTO(
+    val categoryId: UUID,
+    val authorId: UUID,
+    val date: LocalDateTime,
+    val link: String?,
+    val time: Long,
+    val status: String
+)
+
+fun Speedrun.toRequestDTO(): SpeedrunRequestGetDTO {
+    return SpeedrunRequestGetDTO(
         id = this.id,
         categoryId = this.category.id,
         authorId = this.author.id,

@@ -3,21 +3,29 @@ package ru.speedrun.speedrun.dto
 import ru.speedrun.speedrun.models.Category
 import java.util.UUID
 
-data class CategoryRequestMainDTO(
+// For POST request
+data class CategoryRequestPostDTO(
+    val name: String,
+    val description: String?,
+    val gameId: UUID
+)
+
+// Hand for Game
+data class CategoryRequestGameDTO(
+    val category_id: UUID,
+    val category_name: String
+)
+
+// For GET request
+data class CategoryRequestDTO(
     val id: UUID,
     val name: String,
     val description: String?,
     val gameId: UUID
 )
 
-// ??? ????? ??? Game
-data class CategoryRequestDTO(
-    val category_id: UUID,
-    val category_name: String
-)
-
-fun Category.toRequestDTO(): CategoryRequestMainDTO {
-    return CategoryRequestMainDTO(
+fun Category.toRequestDTO(): CategoryRequestDTO {
+    return CategoryRequestDTO(
         id = this.id,
         name = this.name,
         description = this.description,

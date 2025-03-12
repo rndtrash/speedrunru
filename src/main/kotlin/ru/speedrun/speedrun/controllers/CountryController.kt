@@ -2,6 +2,8 @@ package ru.speedrun.speedrun.controllers
 
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import ru.speedrun.speedrun.dto.CategoryRequestPostDTO
+import ru.speedrun.speedrun.dto.CountryRequestPostDTO
 import ru.speedrun.speedrun.dto.toResponseDTO
 import ru.speedrun.speedrun.models.Country
 import ru.speedrun.speedrun.services.CountryService
@@ -22,8 +24,8 @@ class CountryController(private val countryService: CountryService) {
     }
 
     @PostMapping
-    fun createCountry(@RequestBody country: Country): ResponseEntity<Country> {
-        val createdCountry = countryService.createCountry(country)
+    fun createCountry(@RequestBody request: CountryRequestPostDTO): ResponseEntity<Country> {
+        val createdCountry = countryService.createCountry(request)
         return ResponseEntity.status(201).body(createdCountry)
     }
 

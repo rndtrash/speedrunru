@@ -4,8 +4,8 @@ import ru.speedrun.speedrun.repositories.CategoryRepository
 import ru.speedrun.speedrun.repositories.SpeedrunRepository
 import ru.speedrun.speedrun.models.Speedrun
 import ru.speedrun.speedrun.repositories.UserRepository
-import ru.speedrun.speedrun.dto.SpeedrunRequestDTO
 import org.springframework.stereotype.Service
+import ru.speedrun.speedrun.dto.SpeedrunRequestPostDTO
 import ru.speedrun.speedrun.models.Status
 import java.util.UUID
 
@@ -23,10 +23,11 @@ class SpeedrunService(
         return speedrunRepository.findById(id).orElse(null)
     }
 
-    fun createSpeedrun(request: SpeedrunRequestDTO): Speedrun {
+    fun createSpeedrun(request: SpeedrunRequestPostDTO): Speedrun {
         val category = categoryRepository.findById(request.categoryId).get()
         val author = userRepository.findById(request.authorId).get()
         val speedrun = Speedrun(
+            id = UUID.randomUUID(),
             category = category,
             author = author,
             date = request.date,
@@ -37,7 +38,7 @@ class SpeedrunService(
         return speedrunRepository.save(speedrun)
     }
 
-    fun updateSpeedrun(id: UUID, request: SpeedrunRequestDTO): Speedrun {
+    fun updateSpeedrun(id: UUID, request: SpeedrunRequestPostDTO): Speedrun {
         val existingSpeedrun = speedrunRepository.findById(id).get()
         val category = categoryRepository.findById(request.categoryId).get()
         val author = userRepository.findById(request.authorId).get()
