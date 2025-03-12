@@ -5,7 +5,7 @@ import java.util.UUID
 
 @Entity
 @Table(name = "countries")
-data class Country(
+class Country(
     @Id
     @Column(name = "id", nullable = false)
     var id: UUID = UUID.randomUUID(),

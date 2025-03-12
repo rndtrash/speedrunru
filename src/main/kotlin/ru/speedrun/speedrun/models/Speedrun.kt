@@ -8,7 +8,7 @@ enum class Status { VERIFIED, REJECTED, PROCESSING }
 
 @Entity
 @Table(name = "speedruns")
-data class Speedrun(
+class Speedrun(
     @Id
     @Column(name = "id", nullable = false)
     var id: UUID = UUID.randomUUID(),

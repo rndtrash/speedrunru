@@ -6,7 +6,7 @@ import java.util.UUID
 
 @Entity
 @Table(name = "review_data")
-data class ReviewData(
+class ReviewData(
     @Id
     @Column(name = "id", nullable = false)
     var id: UUID? = null,

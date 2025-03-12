@@ -5,7 +5,7 @@ import java.util.UUID
 
 @Entity
 @Table(name = "categories")
-data class Category(
+class Category(
     @Id
     @Column(name = "id", nullable = false)
     var id: UUID = UUID.randomUUID(),
