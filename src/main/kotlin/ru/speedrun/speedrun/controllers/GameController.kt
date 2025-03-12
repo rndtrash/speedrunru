@@ -35,7 +35,7 @@ class GameController(private val gameService: GameService) {
         return ResponseEntity.status(201).body(createdGame)
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     fun updateGame(@PathVariable id: UUID, @RequestBody updatedGame: Game): ResponseEntity<Game> {
         val game = gameService.updateGame(id, updatedGame)
         return ResponseEntity.ok(game)

@@ -35,7 +35,7 @@ class SpeedrunController(
         return ResponseEntity.status(201).body(createdSpeedrun)
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     fun updateSpeedrun(@PathVariable id: UUID, @RequestBody request: SpeedrunRequestDTO): ResponseEntity<Speedrun> {
         val updatedSpeedrun = speedrunService.updateSpeedrun(id, request)
         return ResponseEntity.ok(updatedSpeedrun)

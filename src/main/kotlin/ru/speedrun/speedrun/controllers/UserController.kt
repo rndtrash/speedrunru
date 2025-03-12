@@ -29,7 +29,7 @@ class UserController(
         return ResponseEntity.status(201).body(createdUser)
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     fun updateUser(@PathVariable id: UUID, @RequestBody request: UserRequestDTO): ResponseEntity<User> {
         val updatedUser = userService.updateUser(id, request)
         return ResponseEntity.ok(updatedUser)

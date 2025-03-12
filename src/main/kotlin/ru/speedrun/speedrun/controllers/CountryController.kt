@@ -13,11 +13,7 @@ class CountryController(private val countryService: CountryService) {
     @GetMapping
     fun getAllCountries(): ResponseEntity<out Map<String, Any>> {
         val countries = countryService.getAllCountries()
-        return if (countries != null) {
-            ResponseEntity.ok(mapOf("countries" to countries.map { it.toResponseDTO() }))
-        } else {
-            ResponseEntity.status(500).body(mapOf("message" to "?????? ????????? ?????? ?????"))
-        }
+        return ResponseEntity.ok(mapOf("countries" to countries.map { it.toResponseDTO() }))
     }
 
     @GetMapping("/{id}")
@@ -31,7 +27,7 @@ class CountryController(private val countryService: CountryService) {
         return ResponseEntity.status(201).body(createdCountry)
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     fun updateCountry(@PathVariable id: UUID, @RequestBody updatedCountry: Country): ResponseEntity<Country> {
         val country = countryService.updateCountry(id, updatedCountry)
         return if (country != null) {

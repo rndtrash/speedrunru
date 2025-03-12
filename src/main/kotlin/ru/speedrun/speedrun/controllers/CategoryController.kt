@@ -35,7 +35,7 @@ class CategoryController(
         return ResponseEntity.status(201).body(createdCategory)
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     fun updateCategory(@PathVariable id: UUID, @RequestBody request: CategoryRequestMainDTO): ResponseEntity<Category> {
         val updatedCategory = categoryService.updateCategory(id, request)
         return ResponseEntity.ok(updatedCategory)
