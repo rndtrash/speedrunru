@@ -11,13 +11,3 @@ data class CreateReviewDataDTO(
     val message: String,
     val date: LocalDateTime
 )
-
-fun ReviewData.toRequestDTO(): CreateReviewDataDTO {
-    return CreateReviewDataDTO(
-        id = this.id,
-        speedrunId = this.speedrun.id,
-        moderatorId = this.moderator.id,
-        message = this.message,
-        date = this.date
-    )
-}

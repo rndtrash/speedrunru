@@ -6,12 +6,12 @@ import java.util.*
 
 data class UpdateSpeedrunDTO(
     val id: UUID,
-    val categoryId: UUID,
-    val authorId: UUID,
-    val date: LocalDateTime,
+    val categoryId: UUID?,
+    val authorId: UUID?,
+    val date: LocalDateTime?,
     val link: String?,
-    val time: Long,
-    val status: String
+    val time: Long?,
+    val status: String?
 )
 
 fun Speedrun.toRequestDTO(): UpdateSpeedrunDTO {

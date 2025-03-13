@@ -5,7 +5,7 @@ import java.util.*
 
 data class UpdateCountryDTO(
     val id: UUID,
-    val name: String,
+    val name: String?,
     val flag: String?
 )
 
