@@ -28,7 +28,17 @@ class GameController(private val gameService: GameService) {
 //    fun getAllGames(@RequestParam(required = false) minReleaseDate: LocalDate?): List<Game> = gameService.getAllGames(minReleaseDate)
 
     @GetMapping("/{id}")
-    fun getGameById(@PathVariable id: UUID): Game? = gameService.getGameById(id)
+    fun getGameById(@PathVariable id: UUID): ResponseEntity<Map<String, GetGameDTO?>> {
+        val game = gameService.getGameById(id)
+        return if (game != null) {
+            ResponseEntity.ok(mapOf("game" to game.toRequestDTO()))
+        } else {
+            ResponseEntity.status(404).body(mapOf())
+        }
+    }
+
+//    @GetMapping("/{id}")
+//    fun getGameById(@PathVariable id: UUID): Game? = gameService.getGameById(id)
 
     @PostMapping
     fun createGame(@RequestBody gameDTO: CreateGameDTO): Game = gameService.createGame(gameDTO)
