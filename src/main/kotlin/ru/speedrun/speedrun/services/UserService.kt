@@ -1,9 +1,8 @@
 package ru.speedrun.speedrun.services
 
 import org.springframework.stereotype.Service
-import ru.speedrun.speedrun.dto.UserRequestDTO
+import ru.speedrun.speedrun.dto.users.CreateUserDTO
 import ru.speedrun.speedrun.models.Role
-import ru.speedrun.speedrun.models.Status
 import ru.speedrun.speedrun.models.User
 import ru.speedrun.speedrun.repositories.CountryRepository
 import ru.speedrun.speedrun.repositories.UserRepository
@@ -22,7 +21,7 @@ class UserService(
         return userRepository.findById(id).orElse(null)
     }
 
-    fun createUser(request: UserRequestDTO): User {
+    fun createUser(request: CreateUserDTO): User {
         val country = countryRepository.findById(request.countryId).get()
         val user = User(
             country = country,
@@ -35,7 +34,7 @@ class UserService(
         return userRepository.save(user)
     }
 
-    fun updateUser(id: UUID, request: UserRequestDTO): User {
+    fun updateUser(id: UUID, request: CreateUserDTO): User {
         val existingUser = userRepository.findById(id).get()
         val country = countryRepository.findById(request.countryId).get()
 

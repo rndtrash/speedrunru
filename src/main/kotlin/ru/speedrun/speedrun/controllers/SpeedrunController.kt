@@ -3,9 +3,9 @@ package ru.speedrun.speedrun.controllers
 import ru.speedrun.speedrun.services.SpeedrunService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import ru.speedrun.speedrun.dto.SpeedrunRequestGetDTO
-import ru.speedrun.speedrun.dto.SpeedrunRequestPostDTO
-import ru.speedrun.speedrun.dto.toRequestDTO
+import ru.speedrun.speedrun.dto.speedruns.CreateSpeedrunDTO
+import ru.speedrun.speedrun.dto.speedruns.UpdateSpeedrunDTO
+import ru.speedrun.speedrun.dto.speedruns.toRequestDTO
 import ru.speedrun.speedrun.models.Speedrun
 import java.util.UUID
 
@@ -15,13 +15,13 @@ class SpeedrunController(
     private val speedrunService: SpeedrunService
 ) {
     @GetMapping
-    fun getAllSpeedruns(): ResponseEntity<List<SpeedrunRequestGetDTO>> {
+    fun getAllSpeedruns(): ResponseEntity<List<UpdateSpeedrunDTO>> {
         val speedruns = speedrunService.getAllSpeedruns().map { it.toRequestDTO() }
         return ResponseEntity.ok(speedruns)
     }
 
     @GetMapping("/{id}")
-    fun getSpeedrunById(@PathVariable id: UUID): ResponseEntity<SpeedrunRequestGetDTO> {
+    fun getSpeedrunById(@PathVariable id: UUID): ResponseEntity<UpdateSpeedrunDTO> {
         val speedrun = speedrunService.getSpeedrunById(id)
         return if (speedrun != null) {
             ResponseEntity.ok(speedrun.toRequestDTO())
@@ -31,13 +31,13 @@ class SpeedrunController(
     }
 
     @PostMapping
-    fun createSpeedrun(@RequestBody request: SpeedrunRequestPostDTO): ResponseEntity<Speedrun> {
+    fun createSpeedrun(@RequestBody request: CreateSpeedrunDTO): ResponseEntity<Speedrun> {
         val createdSpeedrun = speedrunService.createSpeedrun(request)
         return ResponseEntity.status(201).body(createdSpeedrun)
     }
 
     @PatchMapping("/{id}")
-    fun updateSpeedrun(@PathVariable id: UUID, @RequestBody request: SpeedrunRequestPostDTO): ResponseEntity<Speedrun> {
+    fun updateSpeedrun(@PathVariable id: UUID, @RequestBody request: UpdateSpeedrunDTO): ResponseEntity<Speedrun> {
         val updatedSpeedrun = speedrunService.updateSpeedrun(id, request)
         return ResponseEntity.ok(updatedSpeedrun)
     }

@@ -1,8 +1,8 @@
 package ru.speedrun.speedrun.services
 
 import org.springframework.stereotype.Service
-import ru.speedrun.speedrun.dto.CountryRequestPostDTO
-import ru.speedrun.speedrun.models.Category
+import ru.speedrun.speedrun.dto.countries.CreateCountryDTO
+import ru.speedrun.speedrun.dto.countries.UpdateCountryDTO
 import ru.speedrun.speedrun.models.Country
 import ru.speedrun.speedrun.repositories.CountryRepository
 import java.util.UUID
@@ -17,7 +17,7 @@ class CountryService(private val countryRepository: CountryRepository) {
         return countryRepository.findById(id).orElse(null)
     }
 
-    fun createCountry(request: CountryRequestPostDTO): Country {
+    fun createCountry(request: CreateCountryDTO): Country {
         val country = Country(
             id = UUID.randomUUID(),
             name = request.name,
@@ -26,12 +26,11 @@ class CountryService(private val countryRepository: CountryRepository) {
         return countryRepository.save(country)
     }
 
-    fun updateCountry(id: UUID, updatedCountry: Country): Country? {
-        val existingCountry = countryRepository.findById(id).get()
-
-        existingCountry.name = updatedCountry.name
-        existingCountry.imageLink = updatedCountry.imageLink
-        return countryRepository.save(existingCountry)
+    fun updateCountry(request: UpdateCountryDTO): Country? {
+        val country = countryRepository.findById(request.id).get()
+        country.name = request.name
+        country.imageLink = request.flag
+        return countryRepository.save(country)
     }
 
     fun deleteCountry(id: UUID) {

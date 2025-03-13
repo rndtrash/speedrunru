@@ -3,7 +3,7 @@ package ru.speedrun.speedrun.controllers
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import ru.speedrun.speedrun.models.User
-import ru.speedrun.speedrun.dto.UserRequestDTO
+import ru.speedrun.speedrun.dto.users.CreateUserDTO
 import ru.speedrun.speedrun.services.UserService
 import java.util.UUID
 
@@ -24,13 +24,13 @@ class UserController(
     }
 
     @PostMapping
-    fun createUser(@RequestBody request: UserRequestDTO): ResponseEntity<User> {
+    fun createUser(@RequestBody request: CreateUserDTO): ResponseEntity<User> {
         val createdUser = userService.createUser(request)
         return ResponseEntity.status(201).body(createdUser)
     }
 
     @PatchMapping("/{id}")
-    fun updateUser(@PathVariable id: UUID, @RequestBody request: UserRequestDTO): ResponseEntity<User> {
+    fun updateUser(@PathVariable id: UUID, @RequestBody request: CreateUserDTO): ResponseEntity<User> {
         val updatedUser = userService.updateUser(id, request)
         return ResponseEntity.ok(updatedUser)
     }

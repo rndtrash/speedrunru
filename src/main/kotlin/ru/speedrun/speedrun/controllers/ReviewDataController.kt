@@ -3,8 +3,8 @@ package ru.speedrun.speedrun.controllers
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import ru.speedrun.speedrun.models.ReviewData
-import ru.speedrun.speedrun.dto.ReviewDataRequestDTO
-import ru.speedrun.speedrun.dto.toRequestDTO
+import ru.speedrun.speedrun.dto.reviews.CreateReviewDataDTO
+import ru.speedrun.speedrun.dto.reviews.toRequestDTO
 import ru.speedrun.speedrun.services.ReviewDataService
 import java.util.UUID
 
@@ -14,13 +14,13 @@ class ReviewDataController(
     private val reviewDataService: ReviewDataService
 ) {
     @GetMapping
-    fun getAllReviews(): ResponseEntity<List<ReviewDataRequestDTO>> {
+    fun getAllReviews(): ResponseEntity<List<CreateReviewDataDTO>> {
         val reviews = reviewDataService.getAllReviews().map { it.toRequestDTO() }
         return ResponseEntity.ok(reviews)
     }
 
     @GetMapping("/{id}")
-    fun getReviewById(@PathVariable id: UUID): ResponseEntity<ReviewDataRequestDTO> {
+    fun getReviewById(@PathVariable id: UUID): ResponseEntity<CreateReviewDataDTO> {
         val review = reviewDataService.getReviewById(id)
         return if (review != null) {
             ResponseEntity.ok(review.toRequestDTO())
@@ -30,13 +30,13 @@ class ReviewDataController(
     }
 
     @PostMapping
-    fun createReview(@RequestBody request: ReviewDataRequestDTO): ResponseEntity<ReviewData> {
+    fun createReview(@RequestBody request: CreateReviewDataDTO): ResponseEntity<ReviewData> {
         val createdReview = reviewDataService.createReview(request)
         return ResponseEntity.status(201).body(createdReview)
     }
 
     @PatchMapping("/{id}")
-    fun updateReview(@PathVariable id: UUID, @RequestBody request: ReviewDataRequestDTO): ResponseEntity<ReviewData> {
+    fun updateReview(@PathVariable id: UUID, @RequestBody request: CreateReviewDataDTO): ResponseEntity<ReviewData> {
         val updatedReview = reviewDataService.updateReview(id, request)
         return ResponseEntity.ok(updatedReview)
     }

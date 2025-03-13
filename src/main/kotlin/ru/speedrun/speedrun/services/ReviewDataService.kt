@@ -1,7 +1,7 @@
 package ru.speedrun.speedrun.services
 
 import org.springframework.stereotype.Service
-import ru.speedrun.speedrun.dto.ReviewDataRequestDTO
+import ru.speedrun.speedrun.dto.reviews.CreateReviewDataDTO
 import ru.speedrun.speedrun.models.ReviewData
 import ru.speedrun.speedrun.repositories.ReviewDataRepository
 import ru.speedrun.speedrun.repositories.SpeedrunRepository
@@ -22,7 +22,7 @@ class ReviewDataService(
         return reviewDataRepository.findById(id).orElse(null)
     }
 
-    fun createReview(request: ReviewDataRequestDTO): ReviewData {
+    fun createReview(request: CreateReviewDataDTO): ReviewData {
         val speedrun = speedrunRepository.findById(request.speedrunId).get()
         val moderator = userRepository.findById(request.moderatorId).get()
         val review = ReviewData(
@@ -34,7 +34,7 @@ class ReviewDataService(
         return reviewDataRepository.save(review)
     }
 
-    fun updateReview(id: UUID, request: ReviewDataRequestDTO): ReviewData {
+    fun updateReview(id: UUID, request: CreateReviewDataDTO): ReviewData {
         val existingReview = reviewDataRepository.findById(id).get()
         val speedrun = speedrunRepository.findById(request.speedrunId).get()
         val moderator = userRepository.findById(request.moderatorId).get()
