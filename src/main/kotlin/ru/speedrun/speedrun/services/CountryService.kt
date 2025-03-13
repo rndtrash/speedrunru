@@ -1,10 +1,8 @@
 package ru.speedrun.speedrun.services
 
 import org.springframework.stereotype.Service
-import ru.speedrun.speedrun.dto.categories.UpdateCategoryDTO
 import ru.speedrun.speedrun.dto.countries.CreateCountryDTO
 import ru.speedrun.speedrun.dto.countries.UpdateCountryDTO
-import ru.speedrun.speedrun.models.Category
 import ru.speedrun.speedrun.models.Country
 import ru.speedrun.speedrun.repositories.CountryRepository
 import java.util.UUID

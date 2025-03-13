@@ -8,11 +8,3 @@ data class UpdateCountryDTO(
     val name: String?,
     val flag: String?
 )
-
-fun Country.toRequestDTO(): UpdateCountryDTO {
-    return UpdateCountryDTO(
-        id = this.id,
-        name = this.name,
-        flag = this.imageLink
-    )
-}
