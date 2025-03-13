@@ -27,6 +27,7 @@ class User(
     @Column(name = "reg_date", nullable = false)
     var regDate: LocalDate,
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 100)
-    var role: String
+    var role: Role
 )

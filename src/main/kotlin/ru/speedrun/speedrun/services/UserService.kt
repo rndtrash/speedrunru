@@ -2,6 +2,8 @@ package ru.speedrun.speedrun.services
 
 import org.springframework.stereotype.Service
 import ru.speedrun.speedrun.dto.UserRequestDTO
+import ru.speedrun.speedrun.models.Role
+import ru.speedrun.speedrun.models.Status
 import ru.speedrun.speedrun.models.User
 import ru.speedrun.speedrun.repositories.CountryRepository
 import ru.speedrun.speedrun.repositories.UserRepository
@@ -28,7 +30,7 @@ class UserService(
             email = request.email,
             password = request.password,
             regDate = request.regDate,
-            role = request.role
+            role = Role.valueOf(request.role.uppercase())
         )
         return userRepository.save(user)
     }
@@ -42,7 +44,7 @@ class UserService(
         existingUser.email = request.email
         existingUser.password = request.password
         existingUser.regDate = request.regDate
-        existingUser.role = request.role
+        existingUser.role = Role.valueOf(request.role.uppercase())
         return userRepository.save(existingUser)
     }
 

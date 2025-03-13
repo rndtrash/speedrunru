@@ -2,7 +2,6 @@ package ru.speedrun.speedrun.controllers
 
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import ru.speedrun.speedrun.dto.CategoryRequestPostDTO
 import ru.speedrun.speedrun.dto.CountryRequestPostDTO
 import ru.speedrun.speedrun.dto.toResponseDTO
 import ru.speedrun.speedrun.models.Country
