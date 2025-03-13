@@ -3,37 +3,58 @@ package ru.speedrun.speedrun.controllers
 import ru.speedrun.speedrun.services.SpeedrunService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import ru.speedrun.speedrun.dto.categories.CreateCategoryDTO
-import ru.speedrun.speedrun.dto.categories.UpdateCategoryDTO
-import ru.speedrun.speedrun.dto.games.CreateGameDTO
-import ru.speedrun.speedrun.dto.games.UpdateGameDTO
-import ru.speedrun.speedrun.dto.speedruns.CreateSpeedrunDTO
-import ru.speedrun.speedrun.dto.speedruns.UpdateSpeedrunDTO
-import ru.speedrun.speedrun.dto.speedruns.toRequestDTO
-import ru.speedrun.speedrun.models.Category
-import ru.speedrun.speedrun.models.Game
+import ru.speedrun.speedrun.dto.speedruns.*
 import ru.speedrun.speedrun.models.Speedrun
-import java.time.LocalDate
 import java.util.UUID
 
 @RestController
-@RequestMapping("/api/speedrun")
+@RequestMapping("/api")
 class SpeedrunController(
     private val speedrunService: SpeedrunService
 ) {
-    @GetMapping
+    @GetMapping("/speedun")
     fun getAllSpeedruns(): List<Speedrun> = speedrunService.getAllSpeedruns()
 
-    @GetMapping("/{id}")
+    @GetMapping("/speedun/{id}")
     fun getSpeedrunById(@PathVariable id: UUID): Speedrun? = speedrunService.getSpeedrunById(id)
 
-    @PostMapping
+    @GetMapping("/game/{gameId}/category/{categoryId}/run")
+    fun getRunsByGameAndCategory(@PathVariable gameId: UUID, @PathVariable categoryId: UUID): ResponseEntity<Map<String, List<GetSpeedrunDTO>>> {
+        return try {
+            val runs = speedrunService.getRunsByGameAndCategory(gameId, categoryId).map { it.toRequestDTO() }
+            ResponseEntity.ok(mapOf("runs" to runs))
+        } catch (e: Exception) {
+            ResponseEntity.status(404).body(mapOf())
+        }
+    }
+
+    @GetMapping("/record/latest")
+    fun getSpeedrunByNewRecord(): ResponseEntity<Map<String, List<GetSpeedrunByNewRecordDTO>>> {
+        return try {
+            val runs = speedrunService.getSpeedrunByNewRecord()
+            ResponseEntity.ok(mapOf("run_list" to runs))
+        } catch (e: Exception) {
+            ResponseEntity.status(500).body(mapOf())
+        }
+    }
+
+    @PostMapping("/speedun")
     fun createSpeedrun(@RequestBody request: CreateSpeedrunDTO): Speedrun = speedrunService.createSpeedrun(request)
 
-    @PatchMapping
+    @PostMapping("/game/{gameId}/category/{categoryId}/run")
+    fun createRun(@PathVariable gameId: UUID, @PathVariable categoryId: UUID, @RequestBody request: CreateSpeedrunByGameidAndByCategiryDTO): ResponseEntity<Map<String, Any>> {
+        return try {
+            speedrunService.createSpeedrunByGameidAndByCategiry(gameId, categoryId, request)
+            ResponseEntity.ok(mapOf())
+        } catch (e: Exception) {
+            ResponseEntity.status(500).body(mapOf())
+        }
+    }
+
+    @PatchMapping("/speedun")
     fun updateSpeedrun(@RequestBody request: UpdateSpeedrunDTO): Speedrun = speedrunService.updateSpeedrun(request)
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/speedur/{id}")
     fun deleteSpeedrun(@PathVariable id: UUID) {
         speedrunService.deleteSpeedrun(id)
     }

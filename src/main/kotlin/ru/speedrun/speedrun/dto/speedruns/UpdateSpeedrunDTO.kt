@@ -13,15 +13,3 @@ data class UpdateSpeedrunDTO(
     val time: Long?,
     val status: String?
 )
-
-fun Speedrun.toRequestDTO(): UpdateSpeedrunDTO {
-    return UpdateSpeedrunDTO(
-        id = this.id,
-        categoryId = this.category.id,
-        authorId = this.author.id,
-        date = this.date,
-        link = this.link,
-        time = this.time,
-        status = this.status.toString()
-    )
-}

@@ -6,4 +6,6 @@ import ru.speedrun.speedrun.models.User
 import java.util.UUID
 
 @Repository
-interface UserRepository : JpaRepository<User, UUID>
+interface UserRepository : JpaRepository<User, UUID> {
+    fun findByName(name: String): User?
+}

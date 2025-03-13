@@ -5,8 +5,7 @@ import ru.speedrun.speedrun.repositories.SpeedrunRepository
 import ru.speedrun.speedrun.models.Speedrun
 import ru.speedrun.speedrun.repositories.UserRepository
 import org.springframework.stereotype.Service
-import ru.speedrun.speedrun.dto.speedruns.CreateSpeedrunDTO
-import ru.speedrun.speedrun.dto.speedruns.UpdateSpeedrunDTO
+import ru.speedrun.speedrun.dto.speedruns.*
 import ru.speedrun.speedrun.models.Status
 import java.util.UUID
 
@@ -24,6 +23,19 @@ class SpeedrunService(
         return speedrunRepository.findById(id).orElse(null)
     }
 
+    fun getRunsByGameAndCategory(gameId: UUID, categoryId: UUID): List<Speedrun> {
+        return speedrunRepository.findByCategoryId(categoryId).filter { it.category.game.id == gameId }
+    }
+
+    fun getSpeedrunByNewRecord(): List<GetSpeedrunByNewRecordDTO> {
+        val latestRuns = speedrunRepository.findTop10ByOrderByDateDesc()
+        return latestRuns.mapIndexed { index, run ->
+            val categoryRuns = speedrunRepository.findByCategoryId(run.category.id).sortedBy { it.time }
+            val place = categoryRuns.indexOfFirst { it.id == run.id } + 1
+            run.toRequestSpeedrunByNewRecordDTO(place)
+        }
+    }
+
     fun createSpeedrun(request: CreateSpeedrunDTO): Speedrun {
         val category = categoryRepository.findById(request.categoryId).get()
         val author = userRepository.findById(request.authorId).get()
@@ -35,6 +47,22 @@ class SpeedrunService(
             link = request.link,
             time = request.time,
             status = Status.valueOf(request.status.uppercase())
+        )
+        return speedrunRepository.save(speedrun)
+    }
+
+    fun createSpeedrunByGameidAndByCategiry(gameId: UUID, categoryId: UUID, request: CreateSpeedrunByGameidAndByCategiryDTO): Speedrun {
+        val category = categoryRepository.findById(categoryId).get()
+        val author = userRepository.findByName(request.player_name)
+            ?: throw IllegalArgumentException("User with name ${request.player_name} not found")
+        val speedrun = Speedrun(
+            id = UUID.randomUUID(),
+            category = category,
+            author = author,
+            date = request.submitted_at,
+            link = request.run_link,
+            time = request.time,
+            status = Status.PROCESSING
         )
         return speedrunRepository.save(speedrun)
     }

@@ -6,4 +6,7 @@ import ru.speedrun.speedrun.models.Speedrun
 import java.util.UUID
 
 @Repository
-interface SpeedrunRepository : JpaRepository<Speedrun, UUID>
+interface SpeedrunRepository : JpaRepository<Speedrun, UUID> {
+    fun findByCategoryId(categoryId: UUID): List<Speedrun>
+    fun findTop10ByOrderByDateDesc(): List<Speedrun>
+}

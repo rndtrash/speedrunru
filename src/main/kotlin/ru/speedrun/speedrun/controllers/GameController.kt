@@ -29,10 +29,10 @@ class GameController(private val gameService: GameService) {
 
     @GetMapping("/{id}")
     fun getGameById(@PathVariable id: UUID): ResponseEntity<Map<String, GetGameDTO?>> {
-        val game = gameService.getGameById(id)
-        return if (game != null) {
-            ResponseEntity.ok(mapOf("game" to game.toRequestDTO()))
-        } else {
+        return try {
+            val game = gameService.getGameById(id)
+            ResponseEntity.ok(mapOf("game" to game!!.toRequestDTO()))
+        } catch (e: Exception) {
             ResponseEntity.status(404).body(mapOf())
         }
     }

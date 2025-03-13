@@ -11,3 +11,11 @@ data class CreateSpeedrunDTO(
     val time: Long,
     val status: String
 )
+
+data class CreateSpeedrunByGameidAndByCategiryDTO(
+    val player_name: String,
+    val category_id: UUID,
+    val time: Long,
+    val submitted_at: LocalDateTime,
+    val run_link: String?
+)
