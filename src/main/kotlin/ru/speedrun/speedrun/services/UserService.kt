@@ -2,6 +2,7 @@ package ru.speedrun.speedrun.services
 
 import org.springframework.stereotype.Service
 import ru.speedrun.speedrun.dto.users.CreateUserDTO
+import ru.speedrun.speedrun.dto.users.UpdateUserDTO
 import ru.speedrun.speedrun.models.Role
 import ru.speedrun.speedrun.models.User
 import ru.speedrun.speedrun.repositories.CountryRepository
@@ -24,6 +25,7 @@ class UserService(
     fun createUser(request: CreateUserDTO): User {
         val country = countryRepository.findById(request.countryId).get()
         val user = User(
+            id = UUID.randomUUID(),
             country = country,
             name = request.name,
             email = request.email,
@@ -34,17 +36,19 @@ class UserService(
         return userRepository.save(user)
     }
 
-    fun updateUser(id: UUID, request: CreateUserDTO): User {
-        val existingUser = userRepository.findById(id).get()
-        val country = countryRepository.findById(request.countryId).get()
-
-        existingUser.country = country
-        existingUser.name = request.name
-        existingUser.email = request.email
-        existingUser.password = request.password
-        existingUser.regDate = request.regDate
-        existingUser.role = Role.valueOf(request.role.uppercase())
-        return userRepository.save(existingUser)
+    fun updateUser(request: UpdateUserDTO): User {
+        val user = userRepository.findById(request.id).get()
+        request.name?.let { user.name = it }
+        request.email?.let { user.email = it }
+        request.password?.let { user.password = it }
+        request.countryId?.let { countryId ->
+            if (countryRepository.existsById(countryId)) {
+                user.country = countryRepository.findById(countryId).get()
+            }
+        }
+        request.regDate?.let { user.regDate = it }
+        request.role?.let { user.role = Role.valueOf(it.uppercase()) }
+        return userRepository.save(user)
     }
 
     fun deleteUser(id: UUID) {

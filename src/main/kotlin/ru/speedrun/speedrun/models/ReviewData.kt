@@ -9,7 +9,7 @@ import java.util.UUID
 class ReviewData(
     @Id
     @Column(name = "id", nullable = false)
-    var id: UUID? = null,
+    var id: UUID,
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId

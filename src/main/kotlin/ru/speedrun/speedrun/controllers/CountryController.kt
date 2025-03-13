@@ -2,9 +2,12 @@ package ru.speedrun.speedrun.controllers
 
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import ru.speedrun.speedrun.dto.categories.CreateCategoryDTO
+import ru.speedrun.speedrun.dto.categories.UpdateCategoryDTO
 import ru.speedrun.speedrun.dto.countries.CreateCountryDTO
 import ru.speedrun.speedrun.dto.countries.UpdateCountryDTO
 import ru.speedrun.speedrun.dto.countries.toRequestDTO
+import ru.speedrun.speedrun.models.Category
 import ru.speedrun.speedrun.models.Country
 import ru.speedrun.speedrun.services.CountryService
 import java.util.UUID
@@ -13,35 +16,19 @@ import java.util.UUID
 @RequestMapping("/api/country")
 class CountryController(private val countryService: CountryService) {
     @GetMapping
-    fun getAllCountries(): ResponseEntity<out Map<String, Any>> {
-        val countries = countryService.getAllCountries()
-        return ResponseEntity.ok(mapOf("countries" to countries.map { it.toRequestDTO() }))
-    }
+    fun getAllCountries(): List<Country>? = countryService.getAllCountries()
 
     @GetMapping("/{id}")
-    fun getCountryById(@PathVariable id: UUID): ResponseEntity<Country> {
-        return ResponseEntity.ofNullable(countryService.getCountryById(id))
-    }
+    fun getCountryById(@PathVariable id: UUID): Country? = countryService.getCountryById(id)
 
     @PostMapping
-    fun createCountry(@RequestBody request: CreateCountryDTO): ResponseEntity<Country> {
-        val createdCountry = countryService.createCountry(request)
-        return ResponseEntity.status(201).body(createdCountry)
-    }
+    fun createCountry(@RequestBody request: CreateCountryDTO): Country = countryService.createCountry(request)
 
-    @PatchMapping("/{id}")
-    fun updateCountry(@RequestBody request: UpdateCountryDTO): ResponseEntity<Country> {
-        val country = countryService.updateCountry(request)
-        return if (country != null) {
-            ResponseEntity.ok(country)
-        } else {
-            ResponseEntity.notFound().build()
-        }
-    }
+    @PatchMapping
+    fun updateCountry(@RequestBody request: UpdateCountryDTO): Country = countryService.updateCountry(request)
 
     @DeleteMapping("/{id}")
-    fun deleteCountry(@PathVariable id: UUID): ResponseEntity<Void> {
+    fun deleteCountry(@PathVariable id: UUID) {
         countryService.deleteCountry(id)
-        return ResponseEntity.noContent().build()
     }
 }

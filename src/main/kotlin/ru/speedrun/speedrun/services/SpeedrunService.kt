@@ -39,18 +39,23 @@ class SpeedrunService(
         return speedrunRepository.save(speedrun)
     }
 
-    fun updateSpeedrun(id: UUID, request: UpdateSpeedrunDTO): Speedrun {
-        val existingSpeedrun = speedrunRepository.findById(id).get()
-        val category = categoryRepository.findById(request.categoryId).get()
-        val author = userRepository.findById(request.authorId).get()
-
-        existingSpeedrun.category = category
-        existingSpeedrun.author = author
-        existingSpeedrun.date = request.date
-        existingSpeedrun.link = request.link
-        existingSpeedrun.time = request.time
-        existingSpeedrun.status = Status.valueOf(request.status.uppercase())
-        return speedrunRepository.save(existingSpeedrun)
+    fun updateSpeedrun(request: UpdateSpeedrunDTO): Speedrun {
+        val speedrun = speedrunRepository.findById(request.id).get()
+        request.categoryId?.let { categoryId ->
+            if (categoryRepository.existsById(categoryId)) {
+                speedrun.category = categoryRepository.findById(categoryId).get()
+            }
+        }
+        request.authorId?.let { authorId ->
+            if (userRepository.existsById(authorId)) {
+                speedrun.author = userRepository.findById(authorId).get()
+            }
+        }
+        request.date?.let { speedrun.date = it }
+        request.link?.let { speedrun.link = it }
+        request.time?.let { speedrun.time = it }
+        request.status?.let { speedrun.status = Status.valueOf(it.uppercase()) }
+        return speedrunRepository.save(speedrun)
     }
 
     fun deleteSpeedrun(id: UUID) {
