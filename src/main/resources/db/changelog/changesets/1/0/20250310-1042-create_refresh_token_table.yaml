@@ -20,13 +20,6 @@ databaseChangeLog:
                   remarks: Идентификатор пользователя
                   type: uuid
               - column:
-                  name: token
-                  remarks: Токен
-                  type: varchar(255)
-                  constraints:
-                    nullable: false
-                    unique: true
-              - column:
                   name: expiry_date
                   remarks: Дата
                   type: date

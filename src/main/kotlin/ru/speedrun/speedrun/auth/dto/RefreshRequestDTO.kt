@@ -1,7 +1,7 @@
 package ru.speedrun.speedrun.auth.dto
 
-import ru.speedrun.speedrun.models.RefreshToken
+import java.util.UUID
 
 data class RefreshRequestDTO(
-    val refreshToken: String
+    val refreshTokenId: UUID
 )

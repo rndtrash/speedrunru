@@ -65,7 +65,7 @@ class AuthenticationService(
         return ResponseDTO(
             message = "Регистрация успешна",
             token = jwtToken,
-            refreshToken = refreshToken.token
+            refreshToken = refreshToken.id.toString()
         )
     }
 
@@ -80,7 +80,7 @@ class AuthenticationService(
             return ResponseDTO(
                 message = "Вход выполнен успешно",
                 token = jwtToken,
-                refreshToken = refreshToken.token
+                refreshToken = refreshToken.id.toString()
 
             )
         } catch (ex: BadCredentialsException) {
@@ -91,13 +91,13 @@ class AuthenticationService(
     }
 
     fun refresh(request: RefreshRequestDTO) : ResponseEntity<ResponseDTO> {
-        val refreshToken = refreshTokenService.verifyRefreshToken(request.refreshToken)
+        val refreshToken = refreshTokenService.verifyRefreshToken(request.refreshTokenId)
         val user = refreshToken.user
         val newAccessToken = jwtService.generateToken(user)
         return ResponseEntity.ok(
             ResponseDTO(
             token = newAccessToken,
-            refreshToken = refreshToken.token,
+            refreshToken = refreshToken.id.toString(),
             message = "Refresh Success"
         )
         )

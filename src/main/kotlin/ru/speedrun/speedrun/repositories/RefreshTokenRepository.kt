@@ -6,6 +6,5 @@ import ru.speedrun.speedrun.models.User
 import java.util.*
 
 interface RefreshTokenRepository : JpaRepository<RefreshToken, UUID> {
-    fun findByToken(token: String): Optional<RefreshToken>
     fun deleteByUser(user: User)
 }

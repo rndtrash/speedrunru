@@ -9,9 +9,6 @@ class RefreshToken(
     @Id
     var id: UUID,
 
-    @Column(nullable = false, unique = true)
-    var token: String,
-
     @Column(name = "expiry_date")
     var expiryDate: Date,
 

@@ -1,5 +1,6 @@
 package ru.speedrun.speedrun.service
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import ru.speedrun.speedrun.config.JwtService
 import ru.speedrun.speedrun.models.RefreshToken
@@ -11,23 +12,21 @@ import java.util.*
 @Service
 class RefreshTokenService(
     private val refreshTokenRepository: RefreshTokenRepository,
-    private val userRepository: UserRepository,
-    private val jwtService: JwtService
 ) {
-    private val refreshTokenValidity: Long = 30 * 24 * 60 * 1000
+    @Value("\${speedrun.jwt.refresh-duration}")
+    private var refreshTokenValidity: Long = 30 * 24 * 60 * 1000
 
     fun createRefreshToken(user: User): RefreshToken =
         refreshTokenRepository.save(
             RefreshToken(
                 id = UUID.randomUUID(),
-                token = jwtService.generateToken(user),
                 user = user,
                 expiryDate = Date(System.currentTimeMillis() + refreshTokenValidity)
             )
         )
 
-    fun verifyRefreshToken(token: String) : RefreshToken {
-        val refreshToken = refreshTokenRepository.findByToken(token)
+    fun verifyRefreshToken(id: UUID) : RefreshToken {
+        val refreshToken = refreshTokenRepository.findById(id)
             .orElseThrow { RuntimeException("Invalid refresh token") }
 
         if (refreshToken.expiryDate.before(Date())) {
