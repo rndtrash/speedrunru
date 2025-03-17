@@ -25,7 +25,6 @@ class GameService(private val gameRepository: GameRepository) {
 
     fun createGame(gameDTO: CreateGameDTO): Game {
         val game = Game(
-            id = UUID.randomUUID(),
             name = gameDTO.name,
             description = gameDTO.description,
             releaseDate = gameDTO.releaseDate,

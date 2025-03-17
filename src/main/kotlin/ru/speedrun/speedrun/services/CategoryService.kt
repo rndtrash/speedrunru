@@ -24,7 +24,6 @@ class CategoryService(
     fun createCategory(request: CreateCategoryDTO): Category {
         val game = gameRepository.findById(request.gameId).get()
         val category = Category(
-            id = UUID.randomUUID(),
             game = game,
             name = request.name,
             description = request.description

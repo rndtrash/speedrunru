@@ -19,7 +19,6 @@ class CountryService(private val countryRepository: CountryRepository) {
 
     fun createCountry(request: CreateCountryDTO): Country {
         val country = Country(
-            id = UUID.randomUUID(),
             name = request.name,
             imageLink = request.flag
         )

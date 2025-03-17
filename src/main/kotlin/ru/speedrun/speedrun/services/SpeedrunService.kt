@@ -40,7 +40,6 @@ class SpeedrunService(
         val category = categoryRepository.findById(request.categoryId).get()
         val author = userRepository.findById(request.authorId).get()
         val speedrun = Speedrun(
-            id = UUID.randomUUID(),
             category = category,
             author = author,
             date = request.date,
@@ -56,7 +55,6 @@ class SpeedrunService(
         val author = userRepository.findByName(request.player_name)
             ?: throw IllegalArgumentException("User with name ${request.player_name} not found")
         val speedrun = Speedrun(
-            id = UUID.randomUUID(),
             category = category,
             author = author,
             date = request.submitted_at,

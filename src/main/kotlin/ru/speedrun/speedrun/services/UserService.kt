@@ -25,7 +25,6 @@ class UserService(
     fun createUser(request: CreateUserDTO): User {
         val country = countryRepository.findById(request.countryId).get()
         val user = User(
-            id = UUID.randomUUID(),
             country = country,
             name = request.name,
             email = request.email,
