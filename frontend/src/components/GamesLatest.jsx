@@ -18,7 +18,7 @@ function getTrophyIcon(place) {
         case 3:
             return '/assets/trophy/bronzeTrophy.png';
         default:
-            return null;
+            return '/assets/trophy/anotherCup.png';
     }
 }
 
