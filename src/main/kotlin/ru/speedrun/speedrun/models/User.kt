@@ -44,13 +44,12 @@ class User(
     var country: Country?
 ) : UserDetails {
     override fun getAuthorities(): List<SimpleGrantedAuthority> {
-        return listOf(SimpleGrantedAuthority(role.name))
+        return listOf(SimpleGrantedAuthority("ROLE_${role.name}"))
     }
 
     override fun getPassword(): String {
        return userPassword
     }
-
 
     override fun getUsername(): String {
         return name
