@@ -18,6 +18,7 @@ import ru.speedrun.speedrun.models.Role
 import ru.speedrun.speedrun.models.User
 import ru.speedrun.speedrun.repositories.UserRepository
 import ru.speedrun.speedrun.service.RefreshTokenService
+import java.time.LocalDate
 import java.util.*
 
 @Service
@@ -56,7 +57,7 @@ class AuthenticationService(
             email = request.email,
             userPassword = passwordEncoder.encode(request.password),
             role = Role.USER,
-            regDate = Date(),
+            regDate = LocalDate.now(),
             country = null
         )
         userRepository.save(user)

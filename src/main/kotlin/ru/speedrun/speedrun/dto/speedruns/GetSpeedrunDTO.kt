@@ -16,8 +16,8 @@ data class GetSpeedrunDTO(
 fun Speedrun.toRequestDTO(): GetSpeedrunDTO {
     return GetSpeedrunDTO(
         player_name = this.author.name,
-        player_country_flag = this.author.country.imageLink,
-        player_country_name = this.author.country.name,
+        player_country_flag = this.author.country!!.imageLink,
+        player_country_name = this.author.country!!.name,
         time = this.time,
         submitted_at = this.date,
         run_link = this.link
@@ -45,8 +45,8 @@ fun Speedrun.toRequestSpeedrunByNewRecordDTO(place: Int): GetSpeedrunByNewRecord
         game_name = this.category.game.name,
         game_icon = this.category.game.imageLink,
         user_name = this.author.name,
-        country_name = this.author.country.name,
-        country_flag = this.author.country.imageLink,
+        country_name = this.author.country!!.name,
+        country_flag = this.author.country!!.imageLink,
         place = place,
         category_name = this.category.name,
         time = this.time,

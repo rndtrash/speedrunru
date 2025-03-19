@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.task.TaskSchedulingProperties.Simp
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+import java.time.LocalDate
 import java.util.Date
 import java.util.UUID
 
@@ -25,7 +26,7 @@ import java.util.UUID
 @Table(name = "users")
 class User(
     @Id
-    var id: UUID,
+    var id: UUID = UUID.randomUUID(),
 
     var name: String,
 
@@ -37,7 +38,7 @@ class User(
     var role: Role,
 
     @Column(name = "reg_date")
-    var regDate: Date,
+    var regDate: LocalDate,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id", nullable = true)

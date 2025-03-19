@@ -28,7 +28,7 @@ class UserService(
             country = country,
             name = request.name,
             email = request.email,
-            password = request.password,
+            userPassword = request.password,
             regDate = request.regDate,
             role = Role.valueOf(request.role.uppercase())
         )
@@ -39,7 +39,7 @@ class UserService(
         val user = userRepository.findById(request.id).get()
         request.name?.let { user.name = it }
         request.email?.let { user.email = it }
-        request.password?.let { user.password = it }
+        request.password?.let { user.userPassword = it }
         request.countryId?.let { countryId ->
             if (countryRepository.existsById(countryId)) {
                 user.country = countryRepository.findById(countryId).get()
