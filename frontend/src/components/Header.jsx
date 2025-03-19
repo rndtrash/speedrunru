@@ -57,7 +57,7 @@ export default function Header(props) {
             setTabValue(0);
         } else if (location.pathname.startsWith('/discussions')) {
             setTabValue(1);
-        } else if (location.pathname.startsWith('/help')) {
+        } else if (location.pathname.startsWith('/FAQ')) {
             setTabValue(2);
         } else {
             setTabValue(null);
@@ -132,7 +132,7 @@ export default function Header(props) {
                 <ListItem component={Link} to="/discussions">
                     <ListItemText primary="Обсуждения" />
                 </ListItem>
-                <ListItem component={Link} to="/help">
+                <ListItem component={Link} to="/FAQ">
                     <ListItemText primary="Помощь" />
                 </ListItem>
             </List>
@@ -239,7 +239,7 @@ export default function Header(props) {
                                         />
                                         <Tab
                                             component={Link}
-                                            to="/help"
+                                            to="/FAQ"
                                             label="Помощь"
                                             sx={{
                                                 color: '#000000',

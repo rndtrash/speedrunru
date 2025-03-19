@@ -9,6 +9,7 @@ import GameInfo from './GameInfo';
 import ErrorPage from './ErrorPage';
 import { Box, Grow } from '@mui/material';
 import Games from "./Games.jsx";
+import FAQPage from "./FAQPage.jsx";
 
 export default function Index() {
     const location = useLocation();
@@ -73,6 +74,16 @@ export default function Index() {
                                 <Grow in timeout={1000}>
                                     <Box>
                                         <Registration />
+                                    </Box>
+                                </Grow>
+                            }
+                        />
+                        <Route
+                            path="/FAQ"
+                            element={
+                                <Grow in timeout={1000}>
+                                    <Box>
+                                        <FAQPage />
                                     </Box>
                                 </Grow>
                             }
