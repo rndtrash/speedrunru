@@ -1,12 +1,10 @@
-package ru.speedrun.speedrun.service
+package ru.speedrun.speedrun.services
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import ru.speedrun.speedrun.config.JwtService
 import ru.speedrun.speedrun.models.RefreshToken
 import ru.speedrun.speedrun.models.User
 import ru.speedrun.speedrun.repositories.RefreshTokenRepository
-import ru.speedrun.speedrun.repositories.UserRepository
 import java.util.*
 
 @Service

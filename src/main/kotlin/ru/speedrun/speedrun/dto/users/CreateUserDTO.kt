@@ -9,5 +9,6 @@ data class CreateUserDTO(
     val email: String,
     val password: String,
     val regDate: LocalDate,
+    val imageLink: String?,
     val role: String
 )

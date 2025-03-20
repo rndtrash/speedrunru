@@ -17,7 +17,7 @@ import ru.speedrun.speedrun.config.JwtService
 import ru.speedrun.speedrun.models.Role
 import ru.speedrun.speedrun.models.User
 import ru.speedrun.speedrun.repositories.UserRepository
-import ru.speedrun.speedrun.service.RefreshTokenService
+import ru.speedrun.speedrun.services.RefreshTokenService
 import java.time.LocalDate
 import java.util.*
 

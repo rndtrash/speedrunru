@@ -6,7 +6,7 @@ import ru.speedrun.speedrun.auth.dto.LoginRequestDTO
 import ru.speedrun.speedrun.auth.dto.RefreshRequestDTO
 import ru.speedrun.speedrun.auth.dto.RegisterRequestDTO
 import ru.speedrun.speedrun.auth.dto.ResponseDTO
-import ru.speedrun.speedrun.service.RefreshTokenService
+import ru.speedrun.speedrun.services.RefreshTokenService
 
 @RestController
 @RequestMapping("/api/auth")
