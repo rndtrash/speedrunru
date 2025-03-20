@@ -31,6 +31,21 @@ class SecurityConfig(
         "/swagger-ui.html"
     )
 
+    private val ADMIN_LIST_POST = arrayOf(
+        "/api/user",
+        "/api/speedrun",
+        "/api/review",
+        "/api/game",
+        "/api/country",
+        "/api/category"
+    )
+
+    private val ADMIN_LIST_PATCH = arrayOf(
+        "/api/review",
+        "/api/game",
+        "/api/country",
+        "/api/category"
+    )
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
@@ -40,7 +55,11 @@ class SecurityConfig(
                 it
                     .requestMatchers(*WHITE_LIST_URL).permitAll()
                     .requestMatchers("/api/demo/admin/**").hasRole("ADMIN")
-                    .requestMatchers("/api/demo/moderator/**").hasRole("MODERATOR")
+                    .requestMatchers(HttpMethod.POST, *ADMIN_LIST_POST).hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.PATCH, *ADMIN_LIST_PATCH).hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.POST,"/api/review").hasRole("MODERATOR")
+                    .requestMatchers(HttpMethod.PATCH,"/api/review").hasRole("MODERATOR")
                     .anyRequest().authenticated()
             }
             .sessionManagement {
