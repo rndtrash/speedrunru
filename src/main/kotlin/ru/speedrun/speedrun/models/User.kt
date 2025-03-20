@@ -40,6 +40,9 @@ class User(
     @Column(name = "reg_date")
     var regDate: LocalDate,
 
+    @Column(name = "image_link")
+    var imageLink: String?,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id", nullable = true)
     var country: Country?
