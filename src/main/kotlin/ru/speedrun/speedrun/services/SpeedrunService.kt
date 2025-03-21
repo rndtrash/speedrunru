@@ -50,10 +50,9 @@ class SpeedrunService(
         return speedrunRepository.save(speedrun)
     }
 
-    fun createSpeedrunByGameidAndByCategiry(gameId: UUID, categoryId: UUID, request: CreateSpeedrunByGameidAndByCategiryDTO): Speedrun {
+    fun createSpeedrunByGameIdAndByCategory(gameId: UUID, categoryId: UUID, request: CreateSpeedrunByGameidAndByCategiryDTO): Speedrun {
         val category = categoryRepository.findById(categoryId).get()
-        val author = userRepository.findByName(request.player_name)
-            ?: throw IllegalArgumentException("User with name ${request.player_name} not found")
+        val author = userRepository.findByName(request.player_name).get()
         val speedrun = Speedrun(
             category = category,
             author = author,

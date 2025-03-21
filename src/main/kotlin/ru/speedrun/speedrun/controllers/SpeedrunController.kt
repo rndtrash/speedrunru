@@ -12,10 +12,10 @@ import java.util.UUID
 class SpeedrunController(
     private val speedrunService: SpeedrunService
 ) {
-    @GetMapping("/speedun")
+    @GetMapping("/speedrun")
     fun getAllSpeedruns(): List<Speedrun> = speedrunService.getAllSpeedruns()
 
-    @GetMapping("/speedun/{id}")
+    @GetMapping("/speedrun/{id}")
     fun getSpeedrunById(@PathVariable id: UUID): Speedrun? = speedrunService.getSpeedrunById(id)
 
     @GetMapping("/game/{gameId}/category/{categoryId}/run")
@@ -38,23 +38,23 @@ class SpeedrunController(
         }
     }
 
-    @PostMapping("/speedun")
+    @PostMapping("/speedrun")
     fun createSpeedrun(@RequestBody request: CreateSpeedrunDTO): Speedrun = speedrunService.createSpeedrun(request)
 
     @PostMapping("/game/{gameId}/category/{categoryId}/run")
     fun createRun(@PathVariable gameId: UUID, @PathVariable categoryId: UUID, @RequestBody request: CreateSpeedrunByGameidAndByCategiryDTO): ResponseEntity<Map<String, Any>> {
         return try {
-            speedrunService.createSpeedrunByGameidAndByCategiry(gameId, categoryId, request)
+            speedrunService.createSpeedrunByGameIdAndByCategory(gameId, categoryId, request)
             ResponseEntity.ok(mapOf())
         } catch (e: Exception) {
             ResponseEntity.status(500).body(mapOf())
         }
     }
 
-    @PatchMapping("/speedun")
+    @PatchMapping("/speedrun")
     fun updateSpeedrun(@RequestBody request: UpdateSpeedrunDTO): Speedrun = speedrunService.updateSpeedrun(request)
 
-    @DeleteMapping("/speedur/{id}")
+    @DeleteMapping("/speedrun/{id}")
     fun deleteSpeedrun(@PathVariable id: UUID) {
         speedrunService.deleteSpeedrun(id)
     }

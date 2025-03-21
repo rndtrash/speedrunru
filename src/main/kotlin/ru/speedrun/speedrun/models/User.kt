@@ -1,33 +1,61 @@
 package ru.speedrun.speedrun.models
 
 import jakarta.persistence.*
+import org.springframework.boot.autoconfigure.task.TaskSchedulingProperties.Simple
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
 import java.time.LocalDate
+import java.util.Date
 import java.util.UUID
 
+/**
+ * Модель данных пользователей.
+ *
+ * @property id Идентификатор пользователя
+ * @property name Имя пользователя
+ * @property email Эл. почта
+ * @property password Пароль
+ * @property role Роль
+ * @property regDate Дата регистрации
+ * @property country Страна
+ *
+ * @author Ivan Abramov
+ */
 @Entity
 @Table(name = "users")
 class User(
     @Id
-    @Column(name = "id", nullable = false)
     var id: UUID = UUID.randomUUID(),
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id", nullable = false)
-    var country: Country,
-
-    @Column(name = "name", nullable = false, length = 255)
     var name: String,
 
-    @Column(name = "email", nullable = false, length = 255)
     var email: String,
-
-    @Column(name = "password", nullable = false, length = 255)
-    var password: String,
-
-    @Column(name = "reg_date", nullable = false)
-    var regDate: LocalDate,
+    @Column(name = "password")
+    var userPassword: String,
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false, length = 100)
-    var role: Role
-)
+    var role: Role,
+
+    @Column(name = "reg_date")
+    var regDate: LocalDate,
+
+    @Column(name = "image_link")
+    var imageLink: String?,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "country_id", nullable = true)
+    var country: Country?
+) : UserDetails {
+    override fun getAuthorities(): List<SimpleGrantedAuthority> {
+        return listOf(SimpleGrantedAuthority("ROLE_${role.name}"))
+    }
+
+    override fun getPassword(): String {
+       return userPassword
+    }
+
+    override fun getUsername(): String {
+        return name
+    }
+}
