@@ -58,7 +58,8 @@ class AuthenticationService(
             userPassword = passwordEncoder.encode(request.password),
             role = Role.USER,
             regDate = LocalDate.now(),
-            country = null
+            country = null,
+            imageLink = "" // TODO: ладно хер с ним
         )
         userRepository.save(user)
         val jwtToken = jwtService.generateToken(user)

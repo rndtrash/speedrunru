@@ -40,6 +40,9 @@ services:
       - seaweedfs
     environment:
       DB_HOST: "postgres:5432"
+      JWT_SECRET: "честным людям скрывать нечего"
+      JWT_ACCESS_DURATION: "3600"
+      JWT_REFRESH_DURATION: "3600"
       SEAWEEDFS_URI: "http://seaweedfs:9333"
     ports:
       - "9090:8080"

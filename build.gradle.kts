@@ -1,3 +1,5 @@
+import com.github.gradle.node.npm.task.NpmTask
+
 val appVersion: String by project
 val liquibaseVersion: String by project
 val jwtVersion: String by project
@@ -8,10 +10,27 @@ plugins {
 	kotlin("plugin.jpa")
 	id("org.springframework.boot") version "3.4.2"
 	id("io.spring.dependency-management") version "1.1.7"
+	id("com.github.node-gradle.node") version "7.1.0"
 }
 
 group = "ru.speedrun"
 version = appVersion
+
+node {
+    download = true
+    nodeProjectDir = file("${project.projectDir}/frontend")
+}
+
+tasks.register<NpmTask>("buildFrontend") {
+	dependsOn("npmInstall")
+    this.args.addAll("run", "build")
+}
+
+tasks.processResources {
+    dependsOn("buildFrontend")
+
+    from("${project.projectDir}/frontend/dist") { into("public") }
+}
 
 java {
 	toolchain {
