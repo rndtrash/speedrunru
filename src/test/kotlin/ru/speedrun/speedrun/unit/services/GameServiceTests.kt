@@ -6,9 +6,7 @@ import org.junit.jupiter.api.assertThrows
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import ru.speedrun.speedrun.dto.games.CreateGameDTO
 import ru.speedrun.speedrun.dto.games.UpdateGameDTO
 import ru.speedrun.speedrun.models.Game
 import ru.speedrun.speedrun.repositories.GameRepository
@@ -16,7 +14,6 @@ import ru.speedrun.speedrun.services.GameService
 import java.time.LocalDate
 import java.util.*
 import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 class GameServiceTests {
@@ -85,7 +82,6 @@ class GameServiceTests {
     @Test
     fun deleteGameThatNotExists() {
         val gameId = UUID.randomUUID()
-
         whenever(gameRepository.existsById(gameId)).thenReturn(false)
 
         val exception = assertThrows<IllegalArgumentException> {
