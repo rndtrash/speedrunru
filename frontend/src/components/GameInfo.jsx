@@ -18,7 +18,7 @@ import { gameInfoMock } from '../utils/gameInfoMock';
 import { gameRecordsMock } from '../utils/gameRecordsMock';
 import { isAuthorized } from '../utils/authStore';
 import AuthModal from './AuthModal';
-import SpeedRunSendModal from './SpeedRunSendModal';
+import SpeedRunSendModal from './speedRunSendModal';
 
 function formatTime(ms) {
     if (ms <= 0) return '0:00:00.000';
