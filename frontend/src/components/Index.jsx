@@ -4,10 +4,12 @@ import Header from './Header';
 import Footer from './Footer';
 import Login from './Login';
 import Registration from './Registration';
-import Games from './Games';
+import GamesLatest from './GamesLatest.jsx';
 import GameInfo from './GameInfo';
 import ErrorPage from './ErrorPage';
 import { Box, Grow } from '@mui/material';
+import Games from "./Games.jsx";
+import FAQPage from "./FAQPage.jsx";
 
 export default function Index() {
     const location = useLocation();
@@ -31,19 +33,29 @@ export default function Index() {
                             element={
                                 <Grow in timeout={1000}>
                                     <Box>
-                                        <Games />
+                                        <GamesLatest />
                                     </Box>
                                 </Grow>
                             }
                         />
                         <Route
-                            path="/games/:id"
+                            path="/Games/:id"
                             element={
                                 <Grow in timeout={1000}>
                                     <Box>
                                         <GameInfo />
                                     </Box>
                                 </Grow>
+                            }
+                        />
+                        <Route
+                            path="/games"
+                            element={
+                            <Grow in timeout={1000}>
+                                <Box>
+                                    <Games/>
+                                </Box>
+                            </Grow>
                             }
                         />
                         <Route
@@ -62,6 +74,16 @@ export default function Index() {
                                 <Grow in timeout={1000}>
                                     <Box>
                                         <Registration />
+                                    </Box>
+                                </Grow>
+                            }
+                        />
+                        <Route
+                            path="/FAQ"
+                            element={
+                                <Grow in timeout={1000}>
+                                    <Box>
+                                        <FAQPage />
                                     </Box>
                                 </Grow>
                             }
