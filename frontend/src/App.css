@@ -6,14 +6,17 @@
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
-  background-color: #f9f9f9;
+  font-family: 'Nunito Sans', sans-serif !important;
+  background-color: #f9f9f9 !important;
   color: #333;
   line-height: 1.6;
 }
+#root{
+  background-color: #f9f9f9 !important;
+}
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Nunito Sans', sans-serif !important;
   color: #222;
   margin-bottom: 0.5em;
 }
@@ -41,9 +44,6 @@ a {
   transition: background-color 0.3s ease;
 }
 
-.btn:hover {
-  background-color: #155a9a;
-}
 
 .footer {
   background-color: #1976d2;

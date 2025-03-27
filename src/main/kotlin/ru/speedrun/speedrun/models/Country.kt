@@ -19,9 +19,9 @@ import java.util.UUID
 @Table(name = "countries")
 class Country(
     @Id
-    var id: UUID,
+    var id: UUID = UUID.randomUUID(),
 
     var name: String,
 
-    var imageLink: String
+    var imageLink: String?
 )

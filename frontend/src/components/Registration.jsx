@@ -7,41 +7,39 @@ import {
     Link,
     IconButton,
     InputAdornment,
+    useMediaQuery,
 } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { registerUser } from '../api/auth';
-import {emailRegex, passwordRegex, usernameRegex} from "../utils/regex.js";
+import { emailRegex, passwordRegex, usernameRegex } from '../utils/regex.js';
+import { setAuthToken, addUser, findUser, setCurrentUser } from '../utils/authStore';
 
 function Registration() {
+    const navigate = useNavigate();
+    const isMobile = useMediaQuery('(max-width:800px)');
+
     const [username, setUsername] = useState('');
     const [usernameTouched, setUsernameTouched] = useState(false);
     const [usernameFocused, setUsernameFocused] = useState(false);
-
     const [email, setEmail] = useState('');
     const [emailTouched, setEmailTouched] = useState(false);
     const [emailFocused, setEmailFocused] = useState(false);
-
     const [password, setPassword] = useState('');
     const [passwordTouched, setPasswordTouched] = useState(false);
     const [passwordFocused, setPasswordFocused] = useState(false);
-
     const [confirmPassword, setConfirmPassword] = useState('');
     const [confirmPasswordTouched, setConfirmPasswordTouched] = useState(false);
     const [confirmPasswordFocused, setConfirmPasswordFocused] = useState(false);
-
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [formError, setFormError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Validation
     const isUsernameValid = usernameRegex.test(username);
     const isEmailValid = emailRegex.test(email);
     const isPasswordValid = passwordRegex.test(password);
     const doPasswordsMatch = password === confirmPassword;
-
     const isFormValid =
         isUsernameValid &&
         isEmailValid &&
@@ -55,7 +53,6 @@ function Registration() {
     const togglePasswordVisibility = () => {
         setShowPassword((prev) => !prev);
     };
-
     const toggleConfirmPasswordVisibility = () => {
         setShowConfirmPassword((prev) => !prev);
     };
@@ -63,13 +60,21 @@ function Registration() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!isFormValid) return;
+        if (findUser({ username, email })) {
+            setFormError('Пользователь с таким именем или email уже зарегистрирован');
+            return;
+        }
         setIsSubmitting(true);
         setFormError('');
-
         try {
-            const data = await registerUser({ username, email, password });
-            console.log('Token:', data.token);
-            //todo сделать сохранение пользователя и его данных или перенаправить на страницу авторизации
+            // лже JWT
+            const token = 'MOCK_JWT_' + Math.random().toString(36).substr(2);
+            setAuthToken(token);
+            const newUser = { username, email, token, avatar: '/assets/defaultAvatar.png' };
+            addUser(newUser);
+            setCurrentUser(newUser);
+            console.log('Token:', token);
+            navigate('/');
         } catch (error) {
             setFormError(error.message);
         } finally {
@@ -102,32 +107,38 @@ function Registration() {
                     maxWidth: '400px',
                 }}
             >
-                <Box
-                    component="img"
-                    src="/assets/mascots/sloth.png"
-                    alt="sloth"
-                    sx={{
-                        position: 'absolute',
-                        left: '30px',
-                        top: '50%',
-                        transform: 'translate(-100%, -50%)',
-                        zIndex: '-1',
-                    }}
-                />
-
-                <Box
-                    component="img"
-                    src="/assets/mascots/bunny.png"
-                    alt="bunny"
-                    sx={{
-                        position: 'absolute',
-                        right: '40px',
-                        top: '30%',
-                        transform: 'translate(100%, -50%)',
-                        zIndex: '-1',
-                    }}
-                />
-
+                {!isMobile && (
+                    <>
+                        <Box
+                            component="img"
+                            src="/assets/mascots/sloth.png"
+                            alt="sloth"
+                            sx={{
+                                position: 'absolute',
+                                left: '30px',
+                                top: '50%',
+                                transform: 'translate(-100%, -50%)',
+                                zIndex: '-1',
+                                maxWidth: '100%',
+                                height: 'auto',
+                            }}
+                        />
+                        <Box
+                            component="img"
+                            src="/assets/mascots/bunny.png"
+                            alt="bunny"
+                            sx={{
+                                position: 'absolute',
+                                right: '40px',
+                                top: '30%',
+                                transform: 'translate(100%, -50%)',
+                                zIndex: '-1',
+                                maxWidth: '100%',
+                                height: 'auto',
+                            }}
+                        />
+                    </>
+                )}
                 <Typography
                     variant="h4"
                     component="h1"
@@ -135,7 +146,6 @@ function Registration() {
                 >
                     Регистрация
                 </Typography>
-
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
                     <TextField
                         label="Имя пользователя"
@@ -153,16 +163,16 @@ function Registration() {
                         }
                         helperText={
                             shouldShowError(usernameTouched, usernameFocused, username, isUsernameValid)
-                                ? 'От 3 до 20 символов: латиница, кириллица, цифры, _, -'
+                                ? 'От 3 до 20 символов: латиница, кириллица, цифры. Должна быть хотя бы 1 буква или цифра'
                                 : ''
                         }
                         sx={{
                             '& .MuiInputLabel-root': { color: '#838488' },
-                            '& .MuiInputBase-input': { color: '#838488' },
+                            '& .MuiInputBase-input': { color: '#000000' },
                             '& .MuiOutlinedInput-root': { borderRadius: '20px' },
+                            '& .MuiInputBase-input::placeholder': { color: '#838488' },
                         }}
                     />
-
                     <TextField
                         label="Email"
                         variant="outlined"
@@ -182,11 +192,11 @@ function Registration() {
                         }
                         sx={{
                             '& .MuiInputLabel-root': { color: '#838488' },
-                            '& .MuiInputBase-input': { color: '#838488' },
+                            '& .MuiInputBase-input': { color: '#000000' },
                             '& .MuiOutlinedInput-root': { borderRadius: '20px' },
+                            '& .MuiInputBase-input::placeholder': { color: '#838488' },
                         }}
                     />
-
                     <TextField
                         label="Пароль"
                         type={showPassword ? 'text' : 'password'}
@@ -202,13 +212,14 @@ function Registration() {
                         error={shouldShowError(passwordTouched, passwordFocused, password, isPasswordValid)}
                         helperText={
                             shouldShowError(passwordTouched, passwordFocused, password, isPasswordValid)
-                                ? 'Минимум 8 символов, минимум 1 цифра и 1 буква'
+                                ? 'Минимум 8 символов, минимум 1 цифра и 1 латинская буква'
                                 : ''
                         }
                         sx={{
                             '& .MuiInputLabel-root': { color: '#838488' },
-                            '& .MuiInputBase-input': { color: '#838488' },
+                            '& .MuiInputBase-input': { color: '#000000' },
                             '& .MuiOutlinedInput-root': { borderRadius: '20px' },
+                            '& .MuiInputBase-input::placeholder': { color: '#838488' },
                         }}
                         InputProps={{
                             endAdornment: (
@@ -220,7 +231,6 @@ function Registration() {
                             ),
                         }}
                     />
-
                     <TextField
                         label="Подтверждение пароля"
                         type={showConfirmPassword ? 'text' : 'password'}
@@ -253,8 +263,9 @@ function Registration() {
                         }
                         sx={{
                             '& .MuiInputLabel-root': { color: '#838488' },
-                            '& .MuiInputBase-input': { color: '#838488' },
+                            '& .MuiInputBase-input': { color: '#000000' },
                             '& .MuiOutlinedInput-root': { borderRadius: '20px' },
+                            '& .MuiInputBase-input::placeholder': { color: '#838488' },
                         }}
                         InputProps={{
                             endAdornment: (
@@ -267,13 +278,11 @@ function Registration() {
                         }}
                     />
                 </Box>
-
                 {formError && (
                     <Typography color="error" sx={{ mt: 1, textAlign: 'center' }}>
                         {formError}
                     </Typography>
                 )}
-
                 <Button
                     type="submit"
                     variant="contained"
@@ -286,12 +295,14 @@ function Registration() {
                         borderRadius: '20px',
                         opacity: !isFormValid || isSubmitting ? 0.6 : 1,
                         marginTop: '33px',
+                        '&:hover': {
+                            backgroundColor: '#5749D0',
+                        },
                     }}
                 >
                     Зарегистрироваться
                 </Button>
-
-                <Typography variant="body2" sx={{ textAlign: 'center' }}>
+                <Typography variant="body1" sx={{ textAlign: 'center' }}>
                     Уже есть аккаунт?{' '}
                     <Link component={RouterLink} to="/Login" underline="hover" sx={{ color: '#6C67EC' }}>
                         Войти

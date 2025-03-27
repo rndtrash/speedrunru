@@ -1,261 +1,126 @@
-import React, { useEffect, useState } from 'react';
-import {
-    Box,
-    Container,
-    Typography,
-    Grid,
-} from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Typography, Grid, Card, CardActionArea, Pagination } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { speedrunMockData } from "../utils/mockData.js";
+import { allGamesMock } from '../utils/allGamesMock';
 
-function getTrophyIcon(place) {
-    switch (place) {
-        case 1:
-            return '/assets/trophy/goldTrophy.png';
-        case 2:
-            return '/assets/trophy/silverTrophy.png';
-        case 3:
-            return '/assets/trophy/bronzeTrophy.png';
-        default:
-            return null;
-    }
-}
+const Games = () => {
+    const [page, setPage] = useState(1);
+    const itemsPerPage = 30;
 
-function placeToString(place) {
-    switch (place) {
-        case 1:
-            return '1-е место';
-        case 2:
-            return '2-е место';
-        case 3:
-            return '3-е место';
-        default:
-            return `${place}-е место`;
-    }
-}
-
-function formatTime(ms) {
-    const hours = Math.floor(ms / 3600000);
-    const minutes = Math.floor((ms % 3600000) / 60000);
-    const seconds = Math.floor((ms % 60000) / 1000);
-    const milliseconds = ms % 1000;
-
-    let result = '';
-    if (hours > 0) {
-        result += `${hours}ч `;
-    }
-    if (minutes > 0 || hours > 0) {
-        result += `${minutes}мин `;
-    }
-    result += `${seconds}с ${milliseconds}мс`;
-    return result.trim();
-}
-
-function formatDate(dateStr) {
-    const date = new Date(dateStr);
-    const options = {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
+    const handleChange = (event, value) => {
+        setPage(value);
     };
-    return date.toLocaleString('ru-RU', options);
-}
 
-export default function Games() {
-    const [records, setRecords] = useState([]);
-
-    useEffect(() => {
-        const mockFetchRecords = async () => {
-            await new Promise((resolve) => setTimeout(resolve, 500));
-            setRecords(speedrunMockData);
-        };
-
-        mockFetchRecords();
-    }, []);
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const currentGames = allGamesMock.slice(startIndex, endIndex);
 
     return (
-        <Box
-            sx={{
-                fontFamily: 'Nunito Sans, sans-serif',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: "center",
-                justifyContent: "center"
-            }}
-        >
-            <Box
+        <Box sx={{ padding: "24px", backgroundColor: "#ffffff", borderRadius: "12px" }}>
+            <Typography
                 sx={{
-                    position: 'relative',
-                    backgroundImage: 'url("/assets/banner.png")',
-                    backgroundPosition: 'center',
-                    backgroundSize: 'contain',
-                    backgroundRepeat: 'no-repeat',
-                    height: { xs: '100px', lg: '331px' },
-                    maxWidth: "1200px",
-                    width: "100%",
-                    mb: 4,
-                }}
-            />
-
-            <Container
-                sx={{
-                    maxWidth: '750px',
-                    minWidth: '400px',
-                    background: "#ffffff",
-                    borderRadius: "24px",
-                    padding: "25px 35px"
+                    fontFamily: 'Nunito Sans',
+                    fontWeight: 800,
+                    fontSize: '24px',
+                    lineHeight: '32.74px',
+                    letterSpacing: '0%',
+                    mb: "20px",
+                    ml: 4,
                 }}
             >
-                <Typography variant="h5" sx={{ mb: 2 }}>
-                    Последние прохождения
-                </Typography>
+                Игры
+            </Typography>
 
-                <Grid
-                    container
-                    spacing={2}
-                    sx={{
-                        flexDirection: { xs: 'column', lg: 'row' },
-                    }}
-                >
-                    {records.map((record, index) => {
-                        const trophyIcon = getTrophyIcon(record.place);
-
-                        return (
-                            <Grid item xs={12} xl={6} key={index}>
-                                <Box
+            <Grid container sx={{ columnGap: '32px', rowGap: '18px' }}>
+                {currentGames.map((game) => {
+                    let fontSize;
+                    switch (true) {
+                        case (game.name.length > 16):
+                            fontSize = "12px";
+                            break;
+                        case (game.name.length > 12):
+                            fontSize = "14px";
+                            break;
+                        case (game.name.length > 10):
+                            fontSize = "16px";
+                            break;
+                        default:
+                            fontSize = "16px";
+                    }
+                    return (
+                        <Grid item key={game.gameId}>
+                            <Card
+                                sx={{
+                                    width: 119,
+                                    borderRadius: '16px',
+                                    overflow: 'hidden',
+                                }}
+                            >
+                                <CardActionArea
                                     component={Link}
-                                    to={`/games/${record.id}`}
-                                    sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        overflow: 'hidden',
-                                        p: 1,
-                                        border: '1px solid #DCDBE0',
-                                        borderRadius: '24px',
-                                        height: '128px',
-                                        width: '100%',
-                                        textDecoration: 'none',
-                                        color: 'inherit',
-                                    }}
+                                    to={`/Games/${game.gameId}`}
+                                    sx={{ height: '100%', display: "flex !important", flexDirection: "column" }}
                                 >
                                     <Box
                                         component="img"
-                                        src={record.icon}
-                                        alt={record.game}
+                                        src={game.image}
+                                        alt={game.name}
                                         sx={{
-                                            maxWidth: '103px',
-                                            maxHeight: '120px',
-                                            width: '100%',
-                                            height: '100%',
-                                            borderRadius: '24px',
+                                            width: 119,
+                                            height: 139,
+                                            borderTopLeftRadius: '16px',
+                                            borderTopRightRadius: '16px',
                                             objectFit: 'cover',
-                                            flexShrink: 0,
-                                            ml: 2,
-                                            mt: 2,
-                                            mr: 2,
-                                            mb: 2,
                                         }}
                                     />
-
                                     <Box
                                         sx={{
-                                            ml: 2,
-                                            flex: 1,
+                                            width: 119,
+                                            height: 37,
+                                            background: "#6C67EC",
                                             display: 'flex',
-                                            flexDirection: 'column',
-                                            gap: "16px",
-                                            height: '100%',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            borderBottomLeftRadius: '16px',
+                                            borderBottomRightRadius: '16px',
+                                            p: 0.5,
                                         }}
                                     >
                                         <Typography
-                                            variant="h6"
                                             sx={{
+                                                fontFamily: 'Nunito Sans',
                                                 fontWeight: 700,
-                                                fontSize: '24px',
-                                                lineHeight: '32.74px',
-                                                color: '#000000',
+                                                fontSize: fontSize,
+                                                lineHeight: '13.82px',
+                                                letterSpacing: '0%',
+                                                color: '#FFFFFF',
+                                                textAlign: 'center',
+                                                display: '-webkit-box',
+                                                WebkitLineClamp: 2,
+                                                WebkitBoxOrient: 'vertical',
+                                                overflow: 'hidden',
                                             }}
                                         >
-                                            {record.game}
+                                            {game.name}
                                         </Typography>
-
-                                        <Box
-                                            sx={{
-                                                display: 'flex',
-                                                justifyContent: "space-between"
-                                            }}
-                                        >
-                                            <Box>
-                                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                    {trophyIcon && (
-                                                        <Box
-                                                            component="img"
-                                                            src={trophyIcon}
-                                                            alt="trophy"
-                                                            sx={{ width: '20px', height: '20px' }}
-                                                        />
-                                                    )}
-                                                    <Typography
-                                                        variant="body2"
-                                                        sx={{
-                                                            fontWeight: 700,
-                                                            fontSize: '16px',
-                                                            lineHeight: '21.82px',
-                                                            ml: trophyIcon ? 0.5 : 0,
-                                                        }}
-                                                    >
-                                                        {placeToString(record.place)}
-                                                    </Typography>
-                                                </Box>
-
-                                                {record.time > 0 && (
-                                                    <Typography
-                                                        variant="body2"
-                                                        sx={{
-                                                            fontWeight: 400,
-                                                            fontSize: '14px',
-                                                            lineHeight: '19.1px',
-                                                            mt: 1,
-                                                        }}
-                                                    >
-                                                        {formatTime(record.time)}
-                                                    </Typography>
-                                                )}
-                                            </Box>
-
-                                            <Box sx={{ textAlign: 'right', mr: 2 }}>
-                                                <Typography
-                                                    variant="body2"
-                                                    sx={{
-                                                        fontWeight: 700,
-                                                        fontSize: '16px',
-                                                        lineHeight: '21.82px',
-                                                    }}
-                                                >
-                                                    {record.user}
-                                                </Typography>
-                                                <Typography
-                                                    variant="body2"
-                                                    sx={{
-                                                        fontWeight: 400,
-                                                        fontSize: '14px',
-                                                        lineHeight: '19.1px',
-                                                        mt: 1,
-                                                    }}
-                                                >
-                                                    {formatDate(record.date)}
-                                                </Typography>
-                                            </Box>
-                                        </Box>
                                     </Box>
-                                </Box>
-                            </Grid>
-                        );
-                    })}
-                </Grid>
-            </Container>
+                                </CardActionArea>
+                            </Card>
+                        </Grid>
+                    );
+                })}
+            </Grid>
+
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+                <Pagination
+                    count={Math.max(Math.ceil(allGamesMock.length / itemsPerPage),1)}
+                    page={page}
+                    onChange={handleChange}
+                    color="primary"
+                />
+            </Box>
         </Box>
     );
-}
+};
+
+export default Games;

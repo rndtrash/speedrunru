@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import java.util.*
@@ -12,7 +13,12 @@ import javax.crypto.SecretKey
 
 @Service
 class JwtService {
-    private final val SECRET_KEY: String = "6dbQzu2rcNFLTSY+DZYRgGYTFEYY4wZ26XIGvCVelkVn9MCmXJtKh0J8GdjOPFkI";
+
+    @Value("\${speedrun.jwt.secret-key}")
+    private lateinit var secretKey: String
+
+    @Value("\${speedrun.jwt.access-duration}")
+    private var expirationDate: Long = 1000 * 60 * 24
 
     fun extractUsername(token: String): String? {
         return extractClaim(token, Claims::getSubject)
@@ -36,7 +42,7 @@ class JwtService {
             .claims(extraClaims)
             .subject(userDetails.username)
             .issuedAt(Date(System.currentTimeMillis()))
-            .expiration(Date(System.currentTimeMillis() + 1000 * 60 * 24))
+            .expiration(Date(System.currentTimeMillis() + expirationDate))
             .signWith<SecretKey>(getSigningKey(), Jwts.SIG.HS256)
             .compact()
     }
@@ -64,7 +70,7 @@ class JwtService {
     }
 
     private fun getSigningKey(): SecretKey {
-        val keyBytes = Decoders.BASE64.decode(SECRET_KEY)
+        val keyBytes = Decoders.BASE64.decode(secretKey)
         return Keys.hmacShaKeyFor(keyBytes)
     }
 
