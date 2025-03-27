@@ -83,7 +83,6 @@ class AuthenticationService(
                 message = "Вход выполнен успешно",
                 token = jwtToken,
                 refreshToken = refreshToken.id.toString()
-
             )
         } catch (ex: BadCredentialsException) {
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Неверное имя пользователя или пароль")
